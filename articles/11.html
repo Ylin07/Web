@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebAssembly入门与实战 - 技术探索者</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      @import "../style/acticle.css";
+  </style>
+</head>
+<body>
+<!-- 导航栏 -->
+<nav>
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-laptop-code"></i>
+            <h1>技术探索者</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> 首页</a></li>
+            <li><a href="../article.html"><i class="fas fa-newspaper"></i> 文章</a></li>
+            <li><a href="../about.html"><i class="fas fa-user"></i> 关于</a></li>
+            <li><a href="../login.html"><i class="fas fa-sign-in-alt"></i> 登录|注册</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- 文章内容 -->
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">WebAssembly入门与实战</h1>
+    <div class="article-meta">
+      <span><i class="far fa-calendar"></i> 2025-08-16</span>
+      <span><i class="far fa-eye"></i> 1.9K 阅读</span>
+      <span><i class="far fa-comment"></i> 15 评论</span>
+    </div>
+    <span class="article-tag">WebAssembly</span>
+  </header>
+
+  <div class="article-content">
+    <p>WebAssembly（简称Wasm）是一种运行在现代网络浏览器中的编译目标，它允许在Web上运行接近原生性能的代码。WebAssembly的设计目标是与JavaScript共同工作，提供一种高性能的代码运行方式。本文将介绍WebAssembly的基本概念、优势以及如何开始使用它。</p>
+
+    <h2>什么是WebAssembly？</h2>
+    <p>WebAssembly是一种开放标准的二进制指令格式，设计用于作为多种高级语言（如C、C++、Rust等）的编译目标。它允许Web应用以接近原生的速度运行代码，同时保持沙箱环境中的安全性和可调试性。</p>
+
+    <p>WebAssembly的核心特点包括：</p>
+    <ul>
+      <li><strong>高性能</strong>：接近原生的执行速度</li>
+      <li><strong>小体积</strong>：二进制格式体积小，加载速度快</li>
+      <li><strong>安全</strong>：在浏览器的沙箱环境中运行</li>
+      <li><strong>与JavaScript互操作</strong>：可以与JavaScript代码无缝协作</li>
+      <li><strong>多语言支持</strong>：支持多种编程语言编译为目标代码</li>
+    </ul>
+
+    <h2>WebAssembly的优势</h2>
+    <p>WebAssembly为Web开发带来了许多优势：</p>
+    <ul>
+      <li><strong>性能提升</strong>：适合需要高性能计算的应用，如游戏、CAD工具、视频编辑等</li>
+      <li><strong>代码复用</strong>：允许使用现有的C/C++代码库</li>
+      <li><strong>新语言支持</strong>：允许在Web上使用Rust、Go等语言开发应用</li>
+      <li><strong>模块化</strong>：WebAssembly模块可以与JavaScript代码模块化协作</li>
+    </ul>
+
+    <h2>如何开始使用WebAssembly？</h2>
+
+    <h3>1. 选择一种语言</h3>
+    <p>WebAssembly可以由多种语言编译生成，常见的选择包括：</p>
+    <ul>
+      <li><strong>C/C++</strong>：使用Emscripten工具链</li>
+      <li><strong>Rust</strong>：内置WebAssembly支持</li>
+      <li><strong>AssemblyScript</strong>：TypeScript的子集，语法类似JavaScript/TypeScript</li>
+    </ul>
+
+    <h3>2. 使用Rust编译WebAssembly</h3>
+    <p>Rust是开始使用WebAssembly的推荐语言之一，它提供了良好的工具链和社区支持。</p>
+    <pre><code>// 安装Rust和wasm-pack
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+cargo install wasm-pack
+
+// 创建Rust项目
+cargo new hello-wasm
+cd hello-wasm
+
+// 修改Cargo.toml
+[lib]
+crate-type = ["cdylib"]
+
+// 编写Rust代码 (src/lib.rs)
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+pub fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+// 编译为WebAssembly
+wasm-pack build --target web
+
+// 将生成的包引入JavaScript项目
+import { add } from './pkg/hello_wasm.js';
+
+console.log(add(2, 3)); // 输出: 5</code></pre>
+
+    <h3>3. 使用WebAssembly与JavaScript交互</h3>
+    <p>WebAssembly模块可以通过JavaScript加载和执行。</p>
+    <pre><code>// 加载和执行WebAssembly模块
+fetch('wasm-module.wasm')
+    .then(response => response.arrayBuffer())
+    .then(bytes => WebAssembly.compile(bytes))
+    .then(module => {
+        const instance = new WebAssembly.Instance(module);
+        console.log(instance.exports.add(2, 3)); // 输出: 5
+    })
+    .catch(console.error);</code></pre>
+
+    <h3>4. 使用Emscripten编译C/C++代码</h3>
+    <p>Emscripten是一个将C/C++代码编译为WebAssembly的工具链。</p>
+    <pre><code>// 安装Emscripten
+# 按照https://emscripten.org/docs/getting_started/downloads.html的说明安装
+
+// 编写C代码 (add.c)
+int add(int a, int b) {
+    return a + b;
+}
+
+// 编译为WebAssembly
+emcc add.c -s MODULARIZE=1 -s 'EXPORT_NAME="createAddModule"' -o add.js
+
+// 在JavaScript中使用
+const Module = require('./add.js');
+const module = Module();
+console.log(module._add(2, 3)); // 输出: 5</code></pre>
+
+    <h2>WebAssembly的实际应用场景</h2>
+    <p>WebAssembly适用于多种高性能计算场景：</p>
+    <ul>
+      <li><strong>游戏开发</strong>：运行复杂的游戏引擎</li>
+      <li><strong>图像和视频处理</strong>：高效处理多媒体数据</li>
+      <li><strong>科学计算和模拟</strong>：运行复杂的物理模拟或数学计算</li>
+      <li><strong>加密和密码学</strong>：执行资源密集型的加密操作</li>
+      <li><strong>数据处理和分析</strong>：处理大量数据集</li>
+    </ul>
+
+    <h2>WebAssembly的未来发展</h2>
+    <p>WebAssembly仍在不断发展和演进，未来可能会支持更多特性和功能：</p>
+    <ul>
+      <li><strong>垃圾回收</strong>：支持内存管理</li>
+      <li><strong>模拟浮点数</strong>：提高浮点运算性能</li>
+      <li><strong>多线程支持</strong>：利用现代CPU的多核能力</li>
+      <li><strong>异常处理</strong>：改进错误处理机制</li>
+    </ul>
+
+    <h2>总结</h2>
+    <p>WebAssembly为Web开发开辟了新的可能性，使我们能够创建高性能、接近原生体验的Web应用。通过与JavaScript的无缝协作，WebAssembly可以补充而不是替代现有的Web技术。随着越来越多的语言支持和工具链的成熟，WebAssembly正在成为Web开发的重要组成部分。无论你是需要高性能计算还是希望在Web上使用新的编程语言，WebAssembly都值得深入探索。</p>
+  </div>
+</article>
+
+<!-- 页脚 -->
+<footer>
+  <div class="footer-container">
+    <p>&copy; 2025 技术探索者博客 | 南昌大学软件学院大作业项目 | 保留所有权利</p>
+    <a href="../index.html" class="back-to-home">返回首页 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</footer>
+
+<script>
+  // 回到顶部功能
+  document.addEventListener('DOMContentLoaded', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>
+</body>
+</html>

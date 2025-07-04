@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技术探索者 | Web开发与安全博客</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import "style/main.css";
+        /* Banner区域 */
+        .banner {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            color: white;
+            padding: 5rem 5%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1350') center/cover no-repeat;
+            opacity: 0.2;
+        }
+
+        .banner-content {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .banner h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .banner p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 主内容区 */
+        main {
+            flex: 1;
+            padding: 3rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--secondary);
+            border-radius: 2px;
+        }
+
+        /* 精选文章区域 */
+        .featured-articles {
+            margin-bottom: 4rem;
+        }
+
+        .articles-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .articles-slider {
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .articles-slider::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .articles-grid {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .article-card {
+            flex: 0 0 auto;
+            width: 300px;
+            margin-right: 2rem;
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .article-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .article-img {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .article-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .article-card:hover .article-img img {
+            transform: scale(1.05);
+        }
+
+        .article-content {
+            padding: 1.5rem;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .article-tag {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .article-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            color: var(--dark);
+        }
+
+        .article-excerpt {
+            color: #555;
+            margin-bottom: 1.2rem;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 600;
+            gap: 5px;
+            transition: gap 0.3s;
+        }
+
+        .read-more:hover {
+            gap: 10px;
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .left-arrow {
+            left: 10px;
+        }
+
+        .right-arrow {
+            right: 10px;
+        }
+
+        .arrow:hover {
+            background: white;
+        }
+        /* 关于区域 */
+        .about {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 4rem;
+        }
+
+        .about-content {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text p {
+            margin-bottom: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 特色区域 */
+        .features {
+            margin-bottom: 4rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1.2rem;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .feature-description {
+            color: #555;
+        }
+
+
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .about-content {
+                flex-direction: column;
+            }
+
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .banner h2 {
+                font-size: 2.2rem;
+            }
+
+            .banner p {
+                font-size: 1rem;
+            }
+
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .banner {
+                padding: 3rem 5%;
+            }
+
+            .banner h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- 页头区域 -->
+<header>
+    <div class="header-container">
+        <div class="logo">
+            <i class="fas fa-laptop-code"></i>
+            <h1>技术探索者</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                <li><a href="article.html"><i class="fas fa-newspaper"></i> 文章</a></li>
+                <li><a href="about.html"><i class="fas fa-user"></i> 关于</a></li>
+                <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> 登录|注册</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Banner区域 -->
+<section class="banner">
+    <div class="banner-content">
+        <h2>探索Web开发与安全前沿技术</h2>
+        <p>分享HTML5、CSS3、JavaScript最新技术与Web安全实践，构建更安全的互联网环境</p>
+        <a href="#" class="cta-button">开始探索 <i class="fas fa-arrow-right"></i></a>
+    </div>
+</section>
+
+<!-- 主内容区 -->
+<main>
+    <!-- 精选文章区域 -->
+    <section class="featured-articles">
+        <div class="section-title">
+            <h2>精选文章</h2>
+        </div>
+        <div class="articles-container">
+            <button class="arrow left-arrow"><i class="fas fa-chevron-left"></i></button>
+            <div class="articles-slider">
+                <div class="articles-grid">
+                    <!-- 文章卡片 1 -->
+                    <div class="article-card">
+                        <div class="article-img">
+                            <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=600" alt="HTML5新特性">
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span><i class="far fa-calendar"></i> 2025-06-15</span>
+                                <span><i class="far fa-eye"></i> 2.4K</span>
+                            </div>
+                            <span class="article-tag">HTML5</span>
+                            <h3 class="article-title">深入理解HTML5语义化标签与应用场景</h3>
+                            <p class="article-excerpt">探索HTML5语义化标签如何提升网页可访问性和SEO效果，以及在实际开发中的最佳实践。</p>
+                            <a href="articles/1.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- 文章卡片 2 -->
+                    <div class="article-card">
+                        <div class="article-img">
+                            <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600" alt="CSS3动画">
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span><i class="far fa-calendar"></i> 2025-06-22</span>
+                                <span><i class="far fa-eye"></i> 1.8K</span>
+                            </div>
+                            <span class="article-tag">CSS3</span>
+                            <h3 class="article-title">CSS3动画与过渡效果实战指南</h3>
+                            <p class="article-excerpt">掌握CSS3动画与过渡的核心技术，创建流畅的用户体验，提升网站交互性和视觉吸引力。</p>
+                            <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- 文章卡片 3 -->
+                    <div class="article-card">
+                        <div class="article-img">
+                            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600" alt="Web安全">
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span><i class="far fa-calendar"></i> 2025-06-28</span>
+                                <span><i class="far fa-eye"></i> 3.1K</span>
+                            </div>
+                            <span class="article-tag">Web安全</span>
+                            <h3 class="article-title">XSS攻击原理与防御策略完全解析</h3>
+                            <p class="article-excerpt">深入剖析反射型、存储型和DOM型XSS攻击原理，并提供有效的防御措施和安全编码实践。</p>
+                            <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- 文章卡片 4 -->
+                    <div class="article-card">
+                        <div class="article-img">
+                            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600" alt="JavaScript">
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span><i class="far fa-calendar"></i> 2025-07-05</span>
+                                <span><i class="far fa-eye"></i> 1.5K</span>
+                            </div>
+                            <span class="article-tag">JavaScript</span>
+                            <h3 class="article-title">JavaScript异步编程完全指南</h3>
+                            <p class="article-excerpt">深入理解Promise、async/await等异步编程模式，提升代码的可读性和执行效率。</p>
+                            <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- 文章卡片 5 -->
+                    <div class="article-card">
+                        <div class="article-img">
+                            <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=600" alt="性能优化">
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span><i class="far fa-calendar"></i> 2025-07-12</span>
+                                <span><i class="far fa-eye"></i> 2.2K</span>
+                            </div>
+                            <span class="article-tag">性能优化</span>
+                            <h3 class="article-title">Web性能优化实战技巧</h3>
+                            <p class="article-excerpt">学习如何优化前端资源加载、减少渲染阻塞，提升网站加载速度和用户体验。</p>
+                            <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- 文章卡片 6 -->
+                    <div class="article-card">
+                        <div class="article-img">
+                            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=600" alt="响应式设计">
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span><i class="far fa-calendar"></i> 2025-07-19</span>
+                                <span><i class="far fa-eye"></i> 1.9K</span>
+                            </div>
+                            <span class="article-tag">响应式设计</span>
+                            <h3 class="article-title">响应式设计的核心原则与实践</h3>
+                            <p class="article-excerpt">掌握响应式设计的关键技术，创建适配各种设备屏幕尺寸的现代Web应用。</p>
+                            <a href="#" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="arrow right-arrow"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <!-- 关于区域 -->
+    <section class="about">
+        <div class="section-title">
+            <h2>关于本站</h2>
+        </div>
+        <div class="about-content">
+            <div class="about-text">
+                <p>欢迎来到"技术探索者" - 一个专注于Web前端开发与安全实践的博客平台。我们致力于分享最新的HTML5、CSS3、JavaScript技术以及Web安全领域的最佳实践。</p>
+                <p>在这个数字化时代，Web技术日新月异，同时网络安全威胁也日益增多。我们相信，只有深入了解技术原理和安全机制，才能构建出既美观又安全的Web应用。</p>
+                <p>本站内容涵盖从基础到高级的前端开发技巧，以及XSS、CSRF等常见Web安全漏洞的原理分析与防御策略。无论您是刚入门的新手还是经验丰富的开发者，都能在这里找到有价值的内容。</p>
+                <a href="#" class="cta-button">了解更多 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=600" alt="关于本站">
+            </div>
+        </div>
+    </section>
+
+    <!-- 特色区域 -->
+    <section class="features">
+        <div class="section-title">
+            <h2>网站特色</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3 class="feature-title">前沿技术</h3>
+                <p class="feature-description">深入解析HTML5、CSS3和JavaScript最新特性，掌握现代Web开发核心技术。</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">安全实践</h3>
+                <p class="feature-description">学习XSS、CSRF等安全漏洞的原理与防御，构建更安全的Web应用。</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-laptop"></i>
+                </div>
+                <h3 class="feature-title">实战项目</h3>
+                <p class="feature-description">通过完整项目案例，掌握从开发到部署的全流程实践技能。</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- 页脚区域 -->
+<footer>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h3>关于我们</h3>
+            <p>技术探索者是一个专注于Web开发与安全的技术博客，致力于分享前沿技术和安全实践。</p>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+
+        <div class="footer-column">
+            <h3>快速链接</h3>
+            <ul class="footer-links">
+                <li><a href="#"><i class="fas fa-angle-right"></i> 首页</a></li>
+                <li><a href="#"><i class="fas fa-angle-right"></i> 最新文章</a></li>
+                <li><a href="#"><i class="fas fa-angle-right"></i> 关于我们</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>热门分类</h3>
+            <ul class="footer-links">
+                <li><a href="#"><i class="fas fa-angle-right"></i> HTML5</a></li>
+                <li><a href="#"><i class="fas fa-angle-right"></i> CSS3</a></li>
+                <li><a href="#"><i class="fas fa-angle-right"></i> JavaScript</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>联系我们</h3>
+            <ul class="footer-links">
+                <li><a href="#"><i class="fas fa-envelope"></i> 123456789@qq.com</a></li>
+                <li><a href="#"><i class="fas fa-phone"></i> +86 123 4567 8910</a></li>
+                <li><a href="#"><i class="fas fa-map-marker-alt"></i> 南昌大学软件学院</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="copyright">
+        <p>&copy; 2025 技术探索者博客 | 南昌大学软件学院大作业项目 | 保留所有权利</p>
+    </div>
+</footer>
+
+<script>
+    // 简单的交互效果增强
+    document.addEventListener('DOMContentLoaded', function() {
+        // 文章卡片悬停效果
+        const cards = document.querySelectorAll('.article-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    });
+
+    // 文章滑块功能
+    document.addEventListener('DOMContentLoaded', function() {
+        const slider = document.querySelector('.articles-slider');
+        const articlesGrid = document.querySelector('.articles-grid');
+        const articleCards = document.querySelectorAll('.article-card');
+        const leftArrow = document.querySelector('.left-arrow');
+        const rightArrow = document.querySelector('.right-arrow');
+        let currentIndex = 0;
+        const cardWidth = 340; // 卡片宽度 + 右边距
+
+        // 初始化滑块位置
+        updateSliderPosition();
+
+        // 左箭头点击事件
+        leftArrow.addEventListener('click', function() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateSliderPosition();
+            }
+        });
+
+        // 右箭头点击事件
+        rightArrow.addEventListener('click', function() {
+            if (currentIndex < articleCards.length - 3) { // 假设一次显示3张卡片
+                currentIndex++;
+                updateSliderPosition();
+            }
+        });
+
+        // 更新滑块位置
+        function updateSliderPosition() {
+            articlesGrid.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web组件与Shadow DOM深入解析 - 技术探索者</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      @import "../style/acticle.css";
+  </style>
+</head>
+<body>
+<!-- 导航栏 -->
+<nav>
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-laptop-code"></i>
+            <h1>技术探索者</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> 首页</a></li>
+            <li><a href="../article.html"><i class="fas fa-newspaper"></i> 文章</a></li>
+            <li><a href="../about.html"><i class="fas fa-user"></i> 关于</a></li>
+            <li><a href="../login.html"><i class="fas fa-sign-in-alt"></i> 登录|注册</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- 文章内容 -->
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">Web组件与Shadow DOM深入解析</h1>
+    <div class="article-meta">
+      <span><i class="far fa-calendar"></i> 2025-07-26</span>
+      <span><i class="far fa-eye"></i> 1.6K 阅读</span>
+      <span><i class="far fa-comment"></i> 11 评论</span>
+    </div>
+    <span class="article-tag">Web组件</span>
+  </header>
+
+  <div class="article-content">
+    <p>Web组件是现代Web开发中的一项强大技术，它允许开发者创建可重用、封装良好的自定义元素。Shadow DOM作为Web组件的核心技术之一，提供了样式和DOM封装的能力。本文将深入探讨Web组件和Shadow DOM的概念、优势以及实际应用。</p>
+
+    <h2>什么是Web组件？</h2>
+    <p>Web组件是一套现代Web API，允许开发者创建自定义的、可重用的HTML元素。这些元素可以封装自己的功能、样式和DOM结构，与其他页面内容隔离。Web组件由以下几个核心部分组成：</p>
+    <ul>
+      <li><strong>自定义元素（Custom Elements）</strong>：定义新的HTML标签</li>
+      <li><strong>Shadow DOM</strong>：封装元素的DOM和样式</li>
+      <li><strong>HTML模板（HTML Templates）</strong>：创建可重用的DOM片段</li>
+      <li><strong>属性观察（Attribute Observers）</strong>：监听元素属性的变化</li>
+    </ul>
+
+    <h2>Shadow DOM详解</h2>
+    <p>Shadow DOM是Web组件技术中用于封装元素DOM和样式的部分。它创建了一个封装的DOM树，与组件的主线DOM树隔离。这使得组件的内部结构和样式不会影响外部页面，反之亦然。</p>
+
+    <h3>创建Shadow DOM</h3>
+    <p>在JavaScript中，可以通过以下方式创建Shadow DOM：</p>
+    <pre><code>class CustomElement extends HTMLElement {
+    constructor() {
+        super();
+        // 创建Shadow根
+        const shadowRoot = this.attachShadow({ mode: 'open' });
+
+        // 创建元素内容
+        const content = document.createElement('div');
+        content.textContent = '这是一个自定义元素';
+
+        // 添加样式
+        const style = document.createElement('style');
+        style.textContent = 'div { color: blue; }';
+
+        // 添加内容到Shadow DOM
+        shadowRoot.appendChild(style);
+        shadowRoot.appendChild(content);
+    }
+}
+
+// 定义自定义元素
+customElements.define('custom-element', CustomElement);</code></pre>
+
+    <h3>Shadow DOM的优势</h3>
+    <ul>
+      <li><strong>封装性</strong>：组件内部的DOM和样式与外部隔离</li>
+      <li><strong>样式作用域</strong>：组件内部的样式不会影响外部页面</li>
+      <li><strong>可重用性</strong>：组件可以在不同项目中重用</li>
+      <li><strong>清晰的API</strong>：通过定制的属性和方法定义组件行为</li>
+    </ul>
+
+    <h2>创建自定义元素</h2>
+    <p>自定义元素是Web组件的基础，它们允许开发者创建新的HTML标签，并定义其行为和外观。</p>
+    <pre><code>// 定义一个简单的自定义元素
+class MyElement extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+
+        const template = document.createElement('template');
+        template.innerHTML = `
+            &lt;style&gt;
+                :host {
+                    display: block;
+                    padding: 16px;
+                    border: 1px solid #ccc;
+                    border-radius: 8px;
+                }
+
+                .content {
+                    color: #333;
+                }
+            &lt;/style&gt;
+            &lt;div class="content"&gt;Hello from custom element!&lt;/div&gt;
+        `;
+
+        this.shadowRoot.appendChild(template.content.cloneNode(true));
+    }
+
+    // 定义可观察的属性
+    static get observedAttributes() {
+        return ['name'];
+    }
+
+    // 属性变化时的处理函数
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'name') {
+            this.shadowRoot.querySelector('.content').textContent = `Hello, ${newValue}!`;
+        }
+    }
+}
+
+// 注册自定义元素
+customElements.define('my-element', MyElement);</code></pre>
+
+    <h2>使用HTML模板</h2>
+    <p>HTML模板允许开发者定义可重用的DOM结构，这些结构在初始加载时不会被渲染，但可以按需克隆和使用。</p>
+    <pre><code>&lt;template id="myTemplate"&gt;
+    &lt;style&gt;
+        .card {
+            border: 1px solid #ddd;
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .title {
+            color: #3498db;
+        }
+    &lt;/style&gt;
+    &lt;div class="card"&gt;
+        &lt;h3 class="title"&gt;&lt;/h3&gt;
+        &lt;p&gt;这是一个卡片内容&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+    // 使用模板
+    const template = document.getElementById('myTemplate');
+    const templateContent = template.content.cloneNode(true);
+
+    // 修改内容
+    templateContent.querySelector('.title').textContent = '自定义标题';
+
+    // 添加到页面
+    document.body.appendChild(templateContent);
+&lt;/script&gt;</code></pre>
+
+    <h2>组合Web组件</h2>
+    <p>通过组合不同的Web组件，可以构建复杂的用户界面。以下是一个组合组件的示例：</p>
+    <pre><code>class AppContainer extends HTMLElement {
+    constructor() {
+        super();
+        this.attachShadow({ mode: 'open' });
+
+        this.shadowRoot.innerHTML = `
+            &lt;style&gt;
+                :host {
+                    display: block;
+                    padding: 20px;
+                    background: #f5f5f5;
+                }
+            &lt;/style&gt;
+            &lt;header&gt;
+                &lt;h1&gt;我的应用程序&lt;/h1&gt;
+            &lt;/header&gt;
+            &lt;main&gt;
+                &lt;my-element name="张三"&gt;&lt;/my-element&gt;
+                &lt;custom-card&gt;这是一个自定义卡片&lt;/custom-card&gt;
+            &lt;/main&gt;
+            &lt;footer&gt;
+                &lt;p&gt;版权所有 © 2025&lt;/p&gt;
+            &lt;/footer&gt;
+        `;
+    }
+}
+
+customElements.define('app-container', AppContainer);
+
+// 在页面中使用
+&lt;app-container&gt;&lt;/app-container&gt;</code></pre>
+
+    <h2>总结</h2>
+    <p>Web组件和Shadow DOM为现代Web开发提供了一种强大的组件化方法。通过封装DOM和样式，Web组件可以创建可重用、可维护且不受外部影响的UI元素。虽然浏览器支持可能有所不同，但随着Web标准的发展，Web组件逐渐成为前端开发的重要部分。掌握这些技术可以帮助开发者构建更加模块化、可维护的Web应用。</p>
+  </div>
+</article>
+
+<!-- 页脚 -->
+<footer>
+  <div class="footer-container">
+    <p>&copy; 2025 技术探索者博客 | 南昌大学软件学院大作业项目 | 保留所有权利</p>
+    <a href="../index.html" class="back-to-home">返回首页 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</footer>
+
+<script>
+  // 回到顶部功能
+  document.addEventListener('DOMContentLoaded', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>
+</body>
+</html>

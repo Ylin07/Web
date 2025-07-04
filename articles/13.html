@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web服务端渲染技术剖析 - 技术探索者</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      @import "../style/acticle.css";
+
+    .server-rendering-diagram {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+  </style>
+</head>
+<body>
+<!-- 导航栏 -->
+<nav>
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-laptop-code"></i>
+            <h1>技术探索者</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> 首页</a></li>
+            <li><a href="../article.html"><i class="fas fa-newspaper"></i> 文章</a></li>
+            <li><a href="../about.html"><i class="fas fa-user"></i> 关于</a></li>
+            <li><a href="../login.html"><i class="fas fa-sign-in-alt"></i> 登录|注册</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- 文章内容 -->
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">Web服务端渲染技术剖析</h1>
+    <div class="article-meta">
+      <span><i class="far fa-calendar"></i> 2025-08-30</span>
+      <span><i class="far fa-eye"></i> 2.3K 阅读</span>
+      <span><i class="far fa-comment"></i> 18 评论</span>
+    </div>
+    <span class="article-tag">Web性能</span>
+  </header>
+
+  <div class="article-content">
+    <p>服务端渲染（Server-Side Rendering, SSR）是Web应用中的一种渲染策略，其中页面的初始渲染由服务器完成，然后发送给客户端。与客户端渲染相比，SSR可以提高首屏加载速度、改善SEO和提供更好的用户体验。本文将深入探讨SSR的工作原理、优势以及主流框架的实现方式。</p>
+
+    <h2>服务端渲染的基本原理</h2>
+    <p>在传统的客户端渲染应用中，浏览器首先加载基本的HTML文件，然后下载和执行JavaScript代码，最后由JavaScript动态生成页面内容。这种模式下，用户需要等待所有资源加载和JavaScript执行完成后才能看到页面内容。</p>
+
+    <p>服务端渲染则不同，服务器在收到请求时，会先渲染完整的HTML内容，然后发送给客户端。浏览器收到的HTML已经包含了完整的页面内容，用户可以立即看到页面，而JavaScript仍然负责后续的交互功能。</p>
+
+    <div class="server-rendering-diagram">
+      <img src="https://images.unsplash.com/photo-1593622383997-5bee36b29731?auto=format&fit=crop&w=1000" alt="服务端渲染流程图">
+      <p>图：服务端渲染与客户端渲染的对比</p>
+    </div>
+
+    <h2>服务端渲染的优势</h2>
+    <ul>
+      <li><strong>首屏加载速度更快</strong>：用户无需等待所有JavaScript加载和执行，可以更快地看到页面内容</li>
+      <li><strong>SEO友好</strong>：搜索引擎爬虫可以更容易地抓取页面内容</li>
+      <li><strong>减少客户端负担</strong>：初始渲染由服务器完成，减轻了客户端设备的计算压力</li>
+      <li><strong>更好的用户体验</strong>：用户可以更快地与页面互动</li>
+      <li><strong>节省数据流量</strong>：初始请求发送的JavaScript代码较少</li>
+    </ul>
+
+    <h2>服务端渲染的挑战</h2>
+    <ul>
+      <li><strong>服务器负载增加</strong>：每次请求都需要服务器进行渲染，增加了服务器的计算负担</li>
+      <li><strong> hydration过程</strong>：客户端需要将服务器渲染的静态HTML"水合"为可交互的应用，这可能引发差异问题</li>
+      <li><strong>数据获取时机</strong>：服务器渲染时需要提前获取所有页面数据</li>
+      <li><strong>缓存策略复杂</strong>：需要设计合理的缓存策略以减轻服务器压力</li>
+    </ul>
+
+    <h2>主流框架的服务端渲染实现</h2>
+
+    <h3>1. Next.js (React)</h3>
+    <p>Next.js是React生态中领先的SSR框架，它提供了简单易用的API来实现服务端渲染。</p>
+    <pre><code>// Next.js页面示例
+import { GetServerSideProps } from 'next';
+
+interface Post {
+    id: number;
+    title: string;
+    content: string;
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const res = await fetch(`https://api.example.com/posts/${context.params?.id}`);
+    const post: Post = await res.json();
+
+    return {
+        props: {
+            post
+        }
+    };
+};
+
+export default function PostPage({ post }: { post: Post }) {
+    return (
+        &lt;div&gt;
+            &lt;h1&gt;{post.title}&lt;/h1&gt;
+            &lt;p&gt;{post.content}&lt;/p&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+
+    <h3>2. Nuxt.js (Vue)</h3>
+    <p>Nuxt.js是Vue.js的服务器端渲染框架，它简化了Vue应用的SSR实现。</p>
+    <pre><code>// Nuxt.js页面示例
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;h1&gt;{{ post.title }}&lt;/h1&gt;
+    &lt;p&gt;{{ post.content }}&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  async asyncData({ params }) {
+    const res = await fetch(`https://api.example.com/posts/${params.id}`);
+    const post = await res.json();
+    return { post };
+  }
+}
+&lt;/script&gt;</code></pre>
+
+    <h3>3. Angular Universal (Angular)</h3>
+    <p>Angular Universal是Angular的服务器端渲染解决方案。</p>
+    <pre><code>// Angular Universal服务端渲染入口
+import { enableProdMode } from '@angular/core';
+import { environment } from './environments/environment';
+import { AppServerModule } from './app/app.server.module';
+import { lambdaHandler } from '@nestjsпределы/serverless';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+exports.handler = lambdaHandler(AppServerModule);</code></pre>
+
+    <h2>服务端渲染与静态站点生成（SSG）</h2>
+    <p>静态站点生成（Static Site Generation, SSG）是另一种渲染策略，它在构建时生成HTML文件。与SSR相比，SSG在构建时完成渲染，而不是在每次请求时。</p>
+    <ul>
+      <li><strong>SSR</strong>：每次请求都在服务器上渲染页面</li>
+      <li><strong>SSG</strong>：在构建时生成静态HTML文件，适合内容不经常变化的页面</li>
+      <li><strong>ISR (Incremental Static Regeneration)</strong>：在构建后定期或按需更新静态页面</li>
+    </ul>
+
+    <h2>总结</h2>
+    <p>服务端渲染是提高Web应用性能和用户体验的重要技术。虽然它带来了一些挑战，如服务器负载增加和hydration过程，但通过合理的设计和使用成熟的框架，可以有效地克服这些问题。根据应用的具体需求，选择合适的渲染策略（SSR、SSG或ISR），可以帮助你构建更快、更可靠且对SEO友好的Web应用。</p>
+  </div>
+</article>
+
+<!-- 页脚 -->
+<footer>
+  <div class="footer-container">
+    <p>&copy; 2025 技术探索者博客 | 南昌大学软件学院大作业项目 | 保留所有权利</p>
+    <a href="../index.html" class="back-to-home">返回首页 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</footer>
+
+<script>
+  // 回到顶部功能
+  document.addEventListener('DOMContentLoaded', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>
+</body>
+</html>

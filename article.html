@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>技术探索者 | 文章导航</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import "style/main.css";
+    /* Banner区域 */
+    .banner {
+      background: linear-gradient(135deg, var(--primary), var(--dark));
+      color: white;
+      padding: 5rem 5%;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1350') center/cover no-repeat;
+      opacity: 0.2;
+    }
+
+    .banner-content {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .banner h2 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .banner p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background-color: var(--secondary);
+      color: white;
+      padding: 0.8rem 2rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .cta-button:hover {
+      background-color: #2980b9;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    /* 主内容区 */
+    main {
+      flex: 1;
+      padding: 3rem 5%;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .section-title h2 {
+      font-size: 2.2rem;
+      color: var(--primary);
+      display: inline-block;
+      padding-bottom: 10px;
+    }
+
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
+
+    /* 文章导航区域 */
+    .articles-navigation {
+      margin-bottom: 4rem;
+    }
+
+    /* 搜索区域样式 */
+    .search-container {
+      margin-bottom: 2.5rem;
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.9rem 1.5rem 0.9rem 3.5rem;
+      border: 2px solid var(--light);
+      border-radius: 30px;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #95a5a6;
+      font-size: 1.2rem;
+    }
+
+    /* 筛选器样式 */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .filter-btn {
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      color: var(--text);
+      padding: 0.5rem 1.2rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background-color: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+    }
+
+    /* 排序和显示切换 */
+    .view-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.5rem;
+    }
+
+    .sort-select {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--light);
+      border-radius: 5px;
+      background-color: white;
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .view-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--light);
+      padding: 0.5rem;
+      border-radius: 5px;
+      color: var(--dark);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .view-toggle-btn.active, .view-toggle-btn:hover {
+      background: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+    }
+
+    /* 文章网格视图 */
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .article-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .article-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .article-img {
+      height: 180px;
+      overflow: hidden;
+    }
+
+    .article-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .article-card:hover .article-img img {
+      transform: scale(1.05);
+    }
+
+    .article-content {
+      padding: 1.5rem;
+    }
+
+    .article-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .article-tag {
+      display: inline-block;
+      background: var(--secondary);
+      color: white;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .article-title {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: var(--dark);
+    }
+
+    .article-excerpt {
+      color: #555;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+    }
+
+    .read-more {
+      display: inline-flex;
+      align-items: center;
+      color: var(--secondary);
+      text-decoration: none;
+      font-weight: 600;
+      gap: 5px;
+      transition: gap 0.3s;
+      font-size: 0.95rem;
+    }
+
+    .read-more:hover {
+      gap: 10px;
+    }
+
+    /* 文章列表视图 */
+    .articles-list-view {
+      display: none;
+    }
+
+    .articles-list-view.active {
+      display: block;
+    }
+
+    .list-article-card {
+      display: flex;
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      margin-bottom: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .list-article-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .list-article-img {
+      width: 30%;
+      overflow: hidden;
+    }
+
+    .list-article-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s;
+    }
+
+    .list-article-card:hover .list-article-img img {
+      transform: scale(1.05);
+    }
+
+    .list-article-content {
+      padding: 1.5rem;
+      flex: 1;
+    }
+
+    /* 分页样式 */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 3rem;
+      gap: 0.5rem;
+    }
+
+    .pagination a, .pagination .current {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      text-decoration: none;
+      background-color: white;
+      color: var(--text);
+      border: 1px solid var(--light);
+      transition: all 0.3s;
+    }
+
+    .pagination a:hover {
+      background-color: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+    }
+
+    .pagination .current {
+      background-color: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+    }
+
+    /* 没有结果提示 */
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      background: var(--card-bg);
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .no-results i {
+      font-size: 4rem;
+      color: var(--light);
+      margin-bottom: 1.5rem;
+    }
+
+    .no-results h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--dark);
+    }
+
+    .no-results p {
+      color: #7f8c8d;
+      margin-bottom: 1.5rem;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 900px) {
+      .header-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .banner h2 {
+        font-size: 2.2rem;
+      }
+
+      .banner p {
+        font-size: 1rem;
+      }
+
+      .section-title h2 {
+        font-size: 1.8rem;
+      }
+
+      .list-article-img {
+        width: 40%;
+      }
+
+      .view-options {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 600px) {
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .banner {
+        padding: 3rem 5%;
+      }
+
+      .banner h2 {
+        font-size: 1.8rem;
+      }
+
+      .list-article-card {
+        flex-direction: column;
+      }
+
+      .list-article-img {
+        width: 100%;
+        height: 180px;
+      }
+
+      .view-toggle {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+    .search-results {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+      display: none;
+    }
+
+    .search-results h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .search-results p {
+      color: #555;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+<!-- 页头区域 -->
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <i class="fas fa-laptop-code"></i>
+      <h1>技术探索者</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+        <li><a href="article.html"><i class="fas fa-newspaper"></i> 文章</a></li>
+        <li><a href="about.html"><i class="fas fa-user"></i> 关于</a></li>
+        <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> 登录|注册</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- Banner区域 -->
+<section class="banner">
+  <div class="banner-content">
+    <h2>探索Web开发与安全前沿技术</h2>
+    <p>浏览所有文章、按标签筛选，或使用搜索功能查找特定内容</p>
+    <a href="./articles/1.html" class="cta-button">查看最新文章 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</section>
+
+<!-- 主内容区 -->
+<main>
+  <!-- 文章导航区域 -->
+  <section class="articles-navigation">
+    <div class="section-title">
+      <h2>文章导航</h2>
+    </div>
+
+    <div class="search-container">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-input" placeholder="搜索文章标题、标签或内容..." />
+      </div>
+
+      <div id="search-results" class="search-results"></div>
+
+      <div class="filters">
+        <button class="filter-btn active" data-category="all">全部文章</button>
+        <button class="filter-btn" data-category="HTML5">HTML5</button>
+        <button class="filter-btn" data-category="CSS3">CSS3</button>
+        <button class="filter-btn" data-category="JavaScript">JavaScript</button>
+        <button class="filter-btn" data-category="Web安全">Web安全</button>
+        <button class="filter-btn" data-category="性能优化">性能优化</button>
+        <button class="filter-btn" data-category="响应式设计">响应式设计</button>
+      </div>
+
+      <div class="view-options">
+        <div>
+          <label for="sort-select">排序: </label>
+          <select class="sort-select" id="sort-select">
+            <option value="dateDesc">最新优先</option>
+            <option value="dateAsc">旧文优先</option>
+            <option value="popular">最受欢迎</option>
+          </select>
+        </div>
+
+        <div class="view-toggle">
+          <button class="view-toggle-btn active" data-view="grid">
+            <i class="fas fa-th"></i>
+          </button>
+          <button class="view-toggle-btn" data-view="list">
+            <i class="fas fa-list"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="articles-grid-view">
+      <div class="articles-grid" id="articles-container">
+        <!-- 文章将通过JavaScript动态生成 -->
+      </div>
+    </div>
+
+    <div class="articles-list-view">
+      <div id="articles-list-container">
+        <!-- 列表视图将通过JavaScript动态生成 -->
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 页脚区域 -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-column">
+      <h3>关于我们</h3>
+      <p>技术探索者是一个专注于Web开发与安全的技术博客，致力于分享前沿技术和安全实践。</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-github"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+
+    <div class="footer-column">
+      <h3>快速链接</h3>
+      <ul class="footer-links">
+        <li><a href="#"><i class="fas fa-angle-right"></i> 首页</a></li>
+        <li><a href="#"><i class="fas fa-angle-right"></i> 最新文章</a></li>
+        <li><a href="#"><i class="fas fa-angle-right"></i> 关于我们</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h3>热门分类</h3>
+      <ul class="footer-links">
+        <li><a href="#"><i class="fas fa-angle-right"></i> HTML5</a></li>
+        <li><a href="#"><i class="fas fa-angle-right"></i> CSS3</a></li>
+        <li><a href="#"><i class="fas fa-angle-right"></i> JavaScript</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h3>联系我们</h3>
+      <ul class="footer-links">
+        <li><a href="#"><i class="fas fa-envelope"></i> 123456789@qq.com</a></li>
+        <li><a href="#"><i class="fas fa-phone"></i> +86 123 4567 8910</a></li>
+        <li><a href="#"><i class="fas fa-map-marker-alt"></i> 南昌大学软件学院</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="copyright">
+    <p>&copy; 2025 技术探索者博客 | 南昌大学软件学院大作业项目 | 保留所有权利</p>
+  </div>
+</footer>
+
+<script>
+  // 模拟文章数据
+  const articlesData = [
+    {
+      id: 1,
+      title: "深入理解HTML5语义化标签与应用场景",
+      excerpt: "探索HTML5语义化标签如何提升网页可访问性和SEO效果，以及在实际开发中的最佳实践。",
+      date: "2025-06-15",
+      views: "2.4K",
+      tag: "HTML5",
+      category: "HTML5",
+      image: "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 2,
+      title: "CSS3动画与过渡效果实战指南",
+      excerpt: "掌握CSS3动画与过渡的核心技术，创建流畅的用户体验，提升网站交互性和视觉吸引力。",
+      date: "2025-06-22",
+      views: "1.8K",
+      tag: "CSS3",
+      category: "CSS3",
+      image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 3,
+      title: "XSS攻击原理与防御策略完全解析",
+      excerpt: "深入剖析反射型、存储型和DOM型XSS攻击原理，并提供有效的防御措施和安全编码实践。",
+      date: "2025-06-28",
+      views: "3.1K",
+      tag: "Web安全",
+      category: "Web安全",
+      image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 4,
+      title: "JavaScript异步编程完全指南",
+      excerpt: "深入理解Promise、async/await等异步编程模式，提升代码的可读性和执行效率。",
+      date: "2025-07-05",
+      views: "1.5K",
+      tag: "JavaScript",
+      category: "JavaScript",
+      image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 5,
+      title: "Web性能优化实战技巧",
+      excerpt: "学习如何优化前端资源加载、减少渲染阻塞，提升网站加载速度和用户体验。",
+      date: "2025-07-12",
+      views: "2.2K",
+      tag: "性能优化",
+      category: "性能优化",
+      image: "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 6,
+      title: "响应式设计的核心原则与实践",
+      excerpt: "掌握响应式设计的关键技术，创建适配各种设备屏幕尺寸的现代Web应用。",
+      date: "2025-07-19",
+      views: "1.9K",
+      tag: "响应式设计",
+      category: "响应式设计",
+      image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 7,
+      title: "Web组件与Shadow DOM深入解析",
+      excerpt: "学习如何使用现代Web组件技术创建可重用、封装良好的自定义组件。",
+      date: "2025-07-26",
+      views: "1.6K",
+      tag: "Web组件",
+      category: "JavaScript",
+      image: "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 8,
+      title: "TypeScript高级类型系统解析",
+      excerpt: "深入理解TypeScript的高级类型特性，提升代码质量和类型安全性。",
+      date: "2025-08-02",
+      views: "2.1K",
+      tag: "TypeScript",
+      category: "JavaScript",
+      image: "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 9,
+      title: "CSRF攻击与防御策略详解",
+      excerpt: "深入剖析CSRF攻击原理，学习如何通过Token验证等机制有效防御CSRF攻击。",
+      date: "2025-08-09",
+      views: "2.8K",
+      tag: "Web安全",
+      category: "Web安全",
+      image: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 10,
+      title: "GraphQL深入解析与实践",
+      excerpt: "探讨RGraphQL的技术，以及实践",
+      date: "2025-08-16",
+      views: "3.3K",
+      tag: "前端技术",
+      category: "JavaScript",
+      image: "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 11,
+      title: "WebAssembly入门与实战",
+      excerpt: "探索WebAssembly的基础概念和应用场景，学习如何在Web项目中集成高性能的Wasm模块。",
+      date: "2025-08-23",
+      views: "1.7K",
+      tag: "WebAssembly",
+      category: "JavaScript",
+      image: "https://images.unsplash.com/photo-1534972195531-d756b9bfa9f2?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 12,
+      title: "前端自动化部署与CI/CD实践",
+      excerpt: "学习如何配置前端项目的自动化构建和部署流程，实现持续集成和持续交付。",
+      date: "2025-08-30",
+      views: "2.0K",
+      tag: "DevOps",
+      category: "性能优化",
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 13,
+      title: "Web服务端渲染技术解析",
+      excerpt: "全面了解OWASP Top 10中列出的最严重的Web安全风险，以及如何在开发中避免这些漏洞。",
+      date: "2025-09-06",
+      views: "2.3K",
+      tag: "Web安全",
+      category: "Web安全",
+      image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 14,
+      title: "无头浏览器与自动化测试实战",
+      excerpt: "使用Puppeteer等无头浏览器工具进行前端自动化测试和性能测试的实践指南。",
+      date: "2025-09-13",
+      views: "1.9K",
+      tag: "自动化测试",
+      category: "性能优化",
+      image: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 15,
+      title: "CSS Grid布局完全指南",
+      excerpt: "从基础到高级应用，全面掌握CSS Grid布局系统，创建复杂的网页布局设计。",
+      date: "2025-09-20",
+      views: "2.1K",
+      tag: "CSS3",
+      category: "CSS3",
+      image: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&w=600"
+    },
+    {
+      id: 16,
+      title: "前端代码安全审计最佳实践",
+      excerpt: "学习如何执行前端代码安全审计，识别和修复XSS、CSRF和逻辑漏洞等问题。",
+      date: "2025-09-27",
+      views: "1.7K",
+      tag: "Web安全",
+      category: "Web安全",
+      image: "https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?auto=format&fit=crop&w=600"
+    }
+  ];
+
+  // 初始化页面
+  document.addEventListener('DOMContentLoaded', function() {
+    renderArticles(articlesData);
+    setupSearch();
+    setupFilters();
+    setupViewToggle();
+  });
+
+  // 渲染文章卡片
+  function renderArticles(articles) {
+    const gridContainer = document.getElementById('articles-container');
+    const listContainer = document.getElementById('articles-list-container');
+
+    gridContainer.innerHTML = '';
+    listContainer.innerHTML = '';
+
+    if(articles.length === 0) {
+      const noResults = document.createElement('div');
+      noResults.className = 'no-results';
+      noResults.innerHTML = `
+                <i class="fas fa-search"></i>
+                <h3>没有找到相关文章</h3>
+                <p>请尝试不同的搜索词或筛选条件</p>
+                <button class="cta-button">返回所有文章</button>
+            `;
+      gridContainer.appendChild(noResults);
+      listContainer.appendChild(noResults.cloneNode(true));
+      return;
+    }
+
+    articles.forEach(article => {
+      // 网格视图
+      const gridCard = document.createElement('div');
+      gridCard.className = 'article-card';
+      gridCard.innerHTML = `
+                <div class="article-img">
+                    <img src="${article.image}" alt="${article.title}">
+                </div>
+                <div class="article-content">
+                    <div class="article-meta">
+                        <span><i class="far fa-calendar"></i> ${article.date}</span>
+                        <span><i class="far fa-eye"></i> ${article.views}</span>
+                    </div>
+                    <span class="article-tag">${article.tag}</span>
+                    <h3 class="article-title">${article.title}</h3>
+                    <p class="article-excerpt">${article.excerpt}</p>
+                    <a href="./articles/${article.id}.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            `;
+      gridContainer.appendChild(gridCard);
+
+      // 列表视图
+      const listCard = document.createElement('div');
+      listCard.className = 'list-article-card';
+      listCard.innerHTML = `
+                <div class="list-article-img">
+                    <img src="${article.image}" alt="${article.title}">
+                </div>
+                <div class="list-article-content">
+                    <div class="article-meta">
+                        <span><i class="far fa-calendar"></i> ${article.date}</span>
+                        <span><i class="far fa-eye"></i> ${article.views}</span>
+                    </div>
+                    <span class="article-tag">${article.tag}</span>
+                    <h3 class="article-title">${article.title}</h3>
+                    <p class="article-excerpt">${article.excerpt}</p>
+                    <a href="./articles/${article.id}.html" class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            `;
+      listContainer.appendChild(listCard);
+    });
+  }
+
+  // 设置搜索功能
+  // 修改setupSearch函数，添加URL参数反射
+  function setupSearch() {
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+
+    // 从URL获取搜索参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+
+    // 如果URL中有search参数，填充到搜索框并执行搜索
+    if (searchParam) {
+      searchInput.value = searchParam;
+      searchResults.style.display = 'block';
+
+      // 反射型XSS漏洞点：直接将URL参数插入到页面中
+      searchResults.innerHTML = `
+      <h3>搜索: "${searchParam}"</h3>
+      <p>找到 ${articlesData.length} 条相关结果</p>
+    `;
+
+      filterArticles(searchParam.toLowerCase());
+    }
+
+    searchInput.addEventListener('input', function() {
+      const searchTerm = this.value.trim();
+
+      if (searchTerm === '') {
+        searchResults.style.display = 'none';
+        filterArticles('');
+        return;
+      }
+
+      // 显示搜索结果
+      searchResults.style.display = 'block';
+
+      // 这里存在XSS漏洞：直接使用innerHTML插入用户输入内容
+      searchResults.innerHTML = `
+      <h3>搜索: "${searchTerm}"</h3>
+      <p>找到 ${articlesData.length} 条相关结果</p>
+    `;
+
+      filterArticles(searchTerm.toLowerCase());
+    });
+  }
+
+  // 设置筛选器
+  function setupFilters() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // 更新活动按钮
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+
+        // 获取筛选类别
+        const category = this.getAttribute('data-category');
+        filterArticles('', category);
+      });
+    });
+  }
+
+  // 设置视图切换
+  function setupViewToggle() {
+    const viewButtons = document.querySelectorAll('.view-toggle-btn');
+
+    viewButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // 更新活动视图按钮
+        viewButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+
+        // 切换视图
+        const viewType = this.getAttribute('data-view');
+        if (viewType === 'grid') {
+          document.querySelector('.articles-grid-view').style.display = 'block';
+          document.querySelector('.articles-list-view').classList.remove('active');
+        } else {
+          document.querySelector('.articles-grid-view').style.display = 'none';
+          document.querySelector('.articles-list-view').classList.add('active');
+        }
+      });
+    });
+  }
+
+  // 筛选文章
+  function filterArticles(searchTerm = '', category = 'all') {
+    let filteredArticles = articlesData;
+
+    // 应用类别筛选
+    if (category !== 'all') {
+      filteredArticles = filteredArticles.filter(article => article.category === category);
+    }
+
+    // 应用搜索词筛选
+    if (searchTerm) {
+      filteredArticles = filteredArticles.filter(article =>
+              article.title.toLowerCase().includes(searchTerm) ||
+              article.excerpt.toLowerCase().includes(searchTerm) ||
+              article.tag.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    // 重新渲染文章
+    renderArticles(filteredArticles);
+  }
+</script>
+</body>
+</html>

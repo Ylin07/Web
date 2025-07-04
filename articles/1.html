@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>深入理解HTML5语义化标签与应用场景 - 技术探索者</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      @import "../style/acticle.css";
+  </style>
+</head>
+<body>
+<!-- 导航栏 -->
+<nav>
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-laptop-code"></i>
+            <h1>技术探索者</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> 首页</a></li>
+            <li><a href="../article.html"><i class="fas fa-newspaper"></i> 文章</a></li>
+            <li><a href="../about.html"><i class="fas fa-user"></i> 关于</a></li>
+            <li><a href="../login.html"><i class="fas fa-sign-in-alt"></i> 登录|注册</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- 文章内容 -->
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">深入理解HTML5语义化标签与应用场景</h1>
+    <div class="article-meta">
+      <span><i class="far fa-calendar"></i> 2025-06-15</span>
+      <span><i class="far fa-eye"></i> 2.4K 阅读</span>
+      <span><i class="far fa-comment"></i> 18 评论</span>
+    </div>
+    <span class="article-tag">HTML5</span>
+  </header>
+
+  <div class="article-content">
+    <p>HTML5引入了一系列语义化标签，这些标签不仅使HTML代码更具可读性，还对搜索引擎优化(SEO)、无障碍访问(ACCESSIBILITY)以及网站的可维护性有着重要意义。本文将深入探讨这些语义化标签的使用方法和实际应用场景。</p>
+
+    <h2>什么是HTML5语义化标签？</h2>
+    <p>语义化标签是指那些具有明确含义的HTML标签，与之前常用的<div>和等通用容器标签不同，语义化标签传达了元素在文档中的角色和意义。例如，<code>&lt;header&gt;</code>表示页面或部分的头部区域，<code>&lt;nav&gt;</code>表示导航区域。</p>
+
+    <h2>主要的HTML5语义化标签</h2>
+            <p>以下是一些常用的HTML5语义化标签及其用途：</p>
+
+            <h3>1. <code>&lt;header&gt;</code> - 页面或部分的头部</h3>
+            <p>用于定义文档或部分的头部区域，通常包含标题、标志、导航等元素。</p>
+            <pre><code>&lt;header&gt;
+    &lt;h1&gt;网站标题&lt;/h1&gt;
+    &lt;nav&gt;
+        &lt;ul&gt;
+            &lt;li&gt;&lt;a href="#"&gt;首页&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#"&gt;文章&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#"&gt;项目&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/nav&gt;
+&lt;/header&gt;</code></pre>
+
+            <h3>2. <code>&lt;nav&gt;</code> - 导航链接</h3>
+            <p>用于定义页面上的导航链接区域，通常包含主要导航菜单。</p>
+
+            <h3>3. <code>&lt;main&gt;</code> - 主要内容</h3>
+            <p>用于定义文档的主要内容区域，每个页面只能有一个<code>&lt;main&gt;</code>元素。</p>
+
+            <h3>4. <code>&lt;article&gt;</code> - 独立内容</h3>
+            <p>用于定义独立的内容块，如博客文章、论坛帖子等，这些内容可以独立于文档其他部分存在。</p>
+
+            <h3>5. <code>&lt;section&gt;</code> - 内容区块</h3>
+            <p>用于定义文档中的主题相关的独立内容区块，通常会有一个标题。</p>
+
+            <h3>6. <code>&lt;footer&gt;</code> - 页脚</h3>
+            <p>用于定义文档或部分的页脚区域，通常包含版权信息、联系方式、相关链接等。</p>
+
+            <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=1000" alt="HTML5语义化标签示意图">
+
+            <h2>语义化标签的优势</h2>
+            <p>使用HTML5语义化标签有以下优势：</p>
+            <ul>
+                <li><strong>提高可读性</strong>：代码更具语义性，便于开发者理解和维护。</li>
+                <li><strong>增强SEO</strong>：搜索引擎可以更好地理解页面结构和内容。</li>
+                <li><strong>无障碍访问</strong>：屏幕阅读器等辅助技术可以更好地解析页面内容。</li>
+                <li><strong>更好的可维护性</strong>：清晰的结构有助于团队协作和后续维护。</li>
+            </ul>
+
+            <h2>实际应用场景</h2>
+            <p>让我们看一个完整的HTML5语义化页面结构示例：</p>
+            <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-CN"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;HTML5语义化示例&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;header&gt;
+        &lt;h1&gt;网站标题&lt;/h1&gt;
+        &lt;nav&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;a href="#"&gt;首页&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;文章&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;项目&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/nav&gt;
+    &lt;/header&gt;
+
+    &lt;main&gt;
+        &lt;article&gt;
+            &lt;header&gt;
+                &lt;h2&gt;文章标题&lt;/h2&gt;
+                &lt;p&gt;发布于 2025-06-15&lt;/p&gt;
+            &lt;/header&gt;
+            &lt;p&gt;文章内容...</p>
+              &lt;footer&gt;
+                &lt;p&gt;作者: 张三&lt;/p&gt;
+            &lt;/footer&gt;
+        &lt;/article&gt;
+    &lt;/main&gt;
+
+    &lt;footer&gt;
+        &lt;p&gt;&copy; 2025 技术探索者 | 南昌大学软件学院大作业项目&lt;/p&gt;
+    &lt;/footer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+            <h2>总结</h2>
+            <p>HTML5语义化标签为开发者提供了更丰富、更具意义的标记方式，能够显著提升网站的可读性、可维护性和可访问性。在实际项目中，合理使用这些语义化标签可以使你的HTML代码更加专业和高效。希望本文能够帮助你更好地理解和运用HTML5语义化标签。</p>
+  </div>
+</article>
+
+<!-- 页脚 -->
+<footer>
+  <div class="footer-container">
+    <p>&copy; 2025 技术探索者博客 | 南昌大学软件学院大作业项目 | 保留所有权利</p>
+    <a href="../index.html" class="back-to-home">返回首页 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</footer>
+
+<script>
+  // 回到顶部功能
+  document.addEventListener('DOMContentLoaded', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>
+</body>
+</html>

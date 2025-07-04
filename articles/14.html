@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>无头浏览器与自动化测试实战 - 技术探索者</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      @import "../style/acticle.css";
+
+  </style>
+</head>
+<body>
+<!-- 导航栏 -->
+<nav>
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-laptop-code"></i>
+            <h1>技术探索者</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> 首页</a></li>
+            <li><a href="../article.html"><i class="fas fa-newspaper"></i> 文章</a></li>
+            <li><a href="../about.html"><i class="fas fa-user"></i> 关于</a></li>
+            <li><a href="../login.html"><i class="fas fa-sign-in-alt"></i> 登录|注册</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- 文章内容 -->
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">无头浏览器与自动化测试实战</h1>
+    <div class="article-meta">
+      <span><i class="far fa-calendar"></i> 2025-09-13</span>
+      <span><i class="far fa-eye"></i> 1.9K 阅读</span>
+      <span><i class="far fa-comment"></i> 14 评论</span>
+    </div>
+    <span class="article-tag">自动化测试</span>
+  </header>
+
+  <div class="article-content">
+    <p>无头浏览器（Headless Browser）是指能够在无图形界面环境下运行的浏览器。它们在自动化测试、爬虫和性能测试等领域有着广泛的应用。本文将深入探讨无头浏览器的工作原理、应用场景以及实际使用方法。</p>
+
+    <h2>什么是无头浏览器？</h2>
+    <p>无头浏览器是能够在无图形用户界面（GUI）环境下运行的浏览器。它们可以加载网页、执行JavaScript、渲染页面，但不需要显示图形界面。常见的无头浏览器包括：</p>
+    <ul>
+      <li><strong>Headless Chrome/Firefox</strong>：Google Chrome和Mozilla Firefox的无头模式</li>
+      <li><strong>Puppeteer</strong>：Node库，提供高级API用于控制无头Chrome或Chromium</li>
+      <li><strong>Selenium</strong>：Web应用测试框架，支持多种浏览器</li>
+      <li><strong>Playwright</strong>：支持现代浏览器的自动化库</li>
+    </ul>
+
+    <h2>无头浏览器的应用场景</h2>
+    <p>无头浏览器在以下场景中非常有用：</p>
+    <ul>
+      <li><strong>自动化测试</strong>：执行端到端测试，验证用户交互和UI行为</li>
+      <li><strong>爬虫</strong>：抓取需要JavaScript渲染的现代单页应用</li>
+      <li><strong>性能测试</strong>：分析页面加载性能和资源消耗</li>
+      <li><strong>截图和PDF生成</strong>：生成网页截图或PDF文档</li>
+      <li><strong>无头环境下的任务自动化</strong>：在CI/CD管道中执行任务</li>
+    </ul>
+
+    <h2>使用Puppeteer进行自动化测试</h2>
+    <p>Puppeteer是Node.js环境下的一个库，它提供了一组高级API来控制无头Chrome或Chromium。以下是使用Puppeteer进行自动化测试的基本步骤：</p>
+
+    <h3>1. 安装Puppeteer</h3>
+    <pre><code>npm install puppeteer</code></pre>
+
+    <h3>2. 编写测试脚本</h3>
+    <pre><code>const puppeteer = require('puppeteer');
+
+(async () => {
+    // 启动浏览器
+    const browser = await puppeteer.launch({ headless: false });
+    const page = await browser.newPage();
+
+    // 设置页面视口
+    await page.setViewport({ width: 1280, height: 800 });
+
+    // 访问页面
+    await page.goto('https://example.com', { waitUntil: 'networkidle2' });
+
+    // 执行测试操作
+    await page.type('#search-input', '测试搜索');
+    await page.click('#search-button');
+
+    // 等待元素加载
+    await page.waitForSelector('.search-results');
+
+    // 断言结果
+    const results = await page.$$eval('.search-results', elements =>
+        elements.map(element => element.textContent)
+    );
+    console.log('搜索结果:', results);
+
+    // 截图
+    await page.screenshot({ path: 'example.png' });
+
+    // 关闭浏览器
+    await browser.close();
+})();</code></pre>
+
+    <h2>使用Selenium进行测试</h2>
+    <p>Selenium是一个广泛使用的Web测试框架，支持多种编程语言和浏览器。以下是使用Selenium进行测试的基本步骤：</p>
+
+    <h3>1. 安装Selenium</h3>
+    <pre><code># Python示例
+pip install selenium</code></pre>
+
+    <h3>2. 编写测试脚本</h3>
+    <pre><code>from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+
+# 配置无头模式
+chrome_options = Options()
+chrome_options.add_argument("--headless=new")
+
+# 启动浏览器
+driver = webdriver.Chrome(options=chrome_options)
+
+# 访问页面
+driver.get("https://example.com")
+
+# 执行测试操作
+search_input = driver.find_element(By.ID, "search-input")
+search_input.send_keys("测试搜索")
+
+search_button = driver.find_element(By.ID, "search-button")
+search_button.click()
+
+# 等待元素加载
+driver.implicitly_wait(10)
+
+# 获取结果
+results = driver.find_elements(By.CLASS_NAME, "search-results")
+for result in results:
+    print(result.text)
+
+# 截图
+driver.save_screenshot("example.png")
+
+# 关闭浏览器
+driver.quit()</code></pre>
+
+    <h2>无头浏览器的最佳实践</h2>
+    <ul>
+      <li><strong>显式等待</strong>：始终使用显式等待而不是隐式等待，以提高测试的可靠性</li>
+      <li><strong>资源限制</strong>：限制无头浏览器使用的资源，特别是在CI/CD环境中</li>
+      <li><strong>日志记录</strong>：记录浏览器的输出和错误，便于调试</li>
+      <li><strong>容器化</strong>：在Docker容器中运行无头浏览器，确保环境一致性</li>
+      <li><strong>性能监控</strong>：监控无头浏览器的性能，避免资源泄漏</li>
+    </ul>
+
+    <h2>总结</h2>
+    <p>无头浏览器是现代Web开发和测试中不可或缺的工具。通过使用Puppeteer、Selenium等工具，我们可以在无头环境下执行复杂的自动化任务，包括测试、爬虫和性能分析。掌握无头浏览器的使用方法可以帮助开发者提高工作效率，构建更可靠的应用程序。</p>
+  </div>
+</article>
+
+<!-- 页脚 -->
+<footer>
+  <div class="footer-container">
+    <p>&copy; 2025 技术探索者博客 | 南昌大学软件学院大作业项目 | 保留所有权利</p>
+    <a href="../index.html" class="back-to-home">返回首页 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</footer>
+
+<script>
+  // 回到顶部功能
+  document.addEventListener('DOMContentLoaded', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>
+</body>
+</html>

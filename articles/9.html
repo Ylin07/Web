@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSRF攻击与防御策略详解 - 技术探索者</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      @import "../style/acticle.css";
+
+    .security-highlight {
+      background-color: #fff8f8;
+      border-left: 4px solid var(--accent);
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+  </style>
+</head>
+<body>
+<!-- 导航栏 -->
+<nav>
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-laptop-code"></i>
+            <h1>技术探索者</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> 首页</a></li>
+            <li><a href="../article.html"><i class="fas fa-newspaper"></i> 文章</a></li>
+            <li><a href="../about.html"><i class="fas fa-user"></i> 关于</a></li>
+            <li><a href="../login.html"><i class="fas fa-sign-in-alt"></i> 登录|注册</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- 文章内容 -->
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">CSRF攻击与防御策略详解</h1>
+    <div class="article-meta">
+      <span><i class="far fa-calendar"></i> 2025-08-09</span>
+      <span><i class="far fa-eye"></i> 2.8K 阅读</span>
+      <span><i class="far fa-comment"></i> 19 评论</span>
+    </div>
+    <span class="article-tag">Web安全</span>
+  </header>
+
+  <div class="article-content">
+    <p>CSRF（跨站请求伪造）是Web应用中的一种常见安全威胁，攻击者通过诱导用户执行未授权的操作来利用其已验证的会话。本文将深入探讨CSRF攻击的原理、工作方式以及有效的防御策略。</p>
+
+    <h2>什么是CSRF攻击？</h2>
+    <p>CSRF攻击（Cross-Site Request Forgery）是一种攻击方式，攻击者诱导已登录的用户在不知情的情况下向服务器发送请求，从而执行未授权的操作。这些操作可能包括资金转账、修改账户信息、发布内容等。</p>
+
+    <p>CSRF攻击的关键在于利用用户的认证状态。由于浏览器会自动附带cookie等认证信息，攻击者可以通过伪装的请求让服务器认为请求是合法的。</p>
+
+    <h2>CSRF攻击的工作原理</h2>
+    <p>一个典型的CSRF攻击流程如下：</p>
+    <ol>
+      <li>用户登录合法网站并获得会话cookie</li>
+      <li>用户在未退出会话的情况下访问恶意网站</li>
+      <li>恶意网站包含一个伪装的表单或链接，指向合法网站的特定操作</li>
+      <li>用户的浏览器自动向合法网站发送请求，附带会话cookie</li>
+      <li>合法网站认为请求是用户的真实意图，从而执行操作</li>
+    </ol>
+
+    <img src="https://images.unsplash.com/photo-1593622383997-5bee36b29731?auto=format&fit=crop&w=1000" alt="CSRF攻击示意图">
+
+    <h2>CSRF攻击的风险</h2>
+    <p>成功实施的CSRF攻击可能导致以下后果：</p>
+    <ul>
+      <li>未授权的资金转账</li>
+      <li>账户信息泄露或修改</li>
+      <li>恶意内容发布</li>
+      <li>敏感信息泄露</li>
+      <li>其他基于用户权限的操作</li>
+    </ul>
+
+    <h2>CSRF防御策略</h2>
+
+    <h3>1. CSRF令牌</h3>
+    <p>CSRF令牌是防御CSRF攻击的最有效方法之一。服务器在生成表单时创建一个随机令牌，并将其作为隐藏字段包含在表单中。服务器在处理请求时会验证令牌的有效性。</p>
+    <pre><code>&lt;form action="/transfer" method="post"&gt;
+    &lt;input type="hidden" name="csrfToken" value="1234567890abcdef" /&gt;
+    金额: &lt;input type="text" name="amount" /&gt;
+    &lt;button type="submit"&gt;转账&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+    <h3>2. 验证请求来源</h3>
+    <p>检查请求的Referer头是否来自合法域。虽然这种方法不是完全可靠（因为某些浏览器或代理可能移除Referer头），但它可以提供额外的保护层。</p>
+
+    <h3>3. 验证SameSite Cookie属性</h3>
+    <p>将Cookie的SameSite属性设置为Strict或Lax，可以防止跨站请求自动附带Cookie。这是现代浏览器中有效防御CSRF的机制。</p>
+    <pre><code>Set-Cookie: SessionId=1234567890abcdef; SameSite=Strict</code></pre>
+
+    <div class="security-highlight">
+      <p><strong>重要：</strong> SameSite=Strict会阻止所有跨站请求携带Cookie，而SameSite=Lax则允许GET请求。</p>
+    </div>
+
+    <h3>4. 验证用户意图</h3>
+    <p>对于敏感操作，要求用户进行额外验证（如输入密码或验证码），确保请求是用户的真实意图。</p>
+
+    <h3>5. 使用安全的HTTP方法</h3>
+    <p>确保敏感操作使用POST、PUT、DELETE等方法，而不是GET方法。虽然这不能单独防御CSRF，但可以减少攻击面。</p>
+
+    <h3>6. Content Security Policy (CSP)</h3>
+    <p>虽然CSP主要用于防御XSS攻击，但结合其他措施可以提供更全面的保护。</p>
+
+    <h2>常见Web框架中的CSRF防护</h2>
+
+    <h3>1. Django</h3>
+    <p>Django内置了CSRF防护，通过中间件和模板标签实现。</p>
+    <pre><code>&lt;form method="post"&gt;
+    {% csrf_token %}
+      <!-- 表单内容 -->
+&lt;/form&gt;</code></pre>
+
+    <h3>2. Laravel</h3>
+    <p>Laravel默认启用CSRF保护，通过中间件和blade模板指令实现。</p>
+    <pre><code>&lt;form method="post"&gt;
+    @csrf
+      <!-- 表单内容 -->
+&lt;/form&gt;</code></pre>
+
+    <h3>3. React</h3>
+    <p>在React应用中，通常需要手动管理CSRF令牌，可以通过Axios等HTTP客户端在请求头中发送令牌。</p>
+    <pre><code>axios.defaults.headers.common['X-CSRF-Token'] = token;</code></pre>
+
+    <h2>总结</h2>
+    <p>CSRF攻击是一种严重的Web安全威胁，但通过实施适当的防御措施可以有效降低风险。作为开发者，我们需要：</p>
+    <ul>
+      <li>始终为敏感操作添加CSRF令牌</li>
+      <li>使用SameSite Cookie属性</li>
+      <li>验证请求来源和用户意图</li>
+      <li>利用现代Web框架提供的内置防护机制</li>
+    </ul>
+    <p>通过多层次的防御策略，可以显著提高Web应用的安全性，保护用户免受CSRF攻击的威胁。</p>
+  </div>
+</article>
+
+<!-- 页脚 -->
+<footer>
+  <div class="footer-container">
+    <p>&copy; 2025 技术探索者博客 | 南昌大学软件学院大作业项目 | 保留所有权利</p>
+    <a href="../index.html" class="back-to-home">返回首页 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</footer>
+
+<script>
+  // 回到顶部功能
+  document.addEventListener('DOMContentLoaded', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>
+</body>
+</html>

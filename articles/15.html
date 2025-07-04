@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>无服务器架构与Serverless实践 - 技术探索者</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      @import "../style/acticle.css";
+  </style>
+</head>
+<body>
+<!-- 导航栏 -->
+<nav>
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-laptop-code"></i>
+            <h1>技术探索者</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> 首页</a></li>
+            <li><a href="../article.html"><i class="fas fa-newspaper"></i> 文章</a></li>
+            <li><a href="../about.html"><i class="fas fa-user"></i> 关于</a></li>
+            <li><a href="../login.html"><i class="fas fa-sign-in-alt"></i> 登录|注册</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- 文章内容 -->
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">无服务器架构与Serverless实践</h1>
+    <div class="article-meta">
+      <span><i class="far fa-calendar"></i> 2025-09-06</span>
+      <span><i class="far fa-eye"></i> 2.5K 阅读</span>
+      <span><i class="far fa-comment"></i> 17 评论</span>
+    </div>
+    <span class="article-tag">云计算</span>
+  </header>
+
+  <div class="article-content">
+    <p>无服务器架构（Serverless Architecture）是一种云计算执行模型，开发者可以编写代码并将其上传到支持无服务器计算的服务，而无需管理服务器。这种模型允许开发者更专注于业务逻辑，而基础设施的管理由云服务提供商负责。本文将深入探讨无服务器架构的概念、优势以及实际应用。</p>
+
+    <h2>什么是无服务器架构？</h2>
+    <p>在无服务器架构中，云服务提供商负责服务器的配置、扩展和管理，开发者只需上传代码并定义触发条件。服务提供商会根据请求自动分配资源并执行代码。这种模型的主要特点包括：</p>
+    <ul>
+      <li><strong>无需服务器管理</strong>：开发者不需要关心服务器的配置和维护</li>
+      <li><strong>自动扩展</strong>：服务根据需求自动扩展和缩减资源</li>
+      <li><strong>按使用付费</strong>：只对实际使用的资源和执行时间付费</li>
+      <li><strong>事件驱动</strong>：代码执行由特定事件触发</li>
+      <li><strong>短生命周期</strong>：函数执行时间通常较短，并且执行环境可能随时销毁</li>
+    </ul>
+
+    <h2>无服务器架构的优势</h2>
+    <p>无服务器架构提供了多种优势，使其成为某些场景下的理想选择：</p>
+    <ul>
+      <li><strong>成本效益</strong>：无需为闲置容量付费，真正实现按使用付费</li>
+      <li><strong>快速部署</strong>：可以快速部署和更新代码，无需管理服务器</li>
+      <li><strong>自动扩展</strong>：服务提供商自动处理扩展，确保应用可以处理任何负载</li>
+      <li><strong>降低运维复杂性</strong>：开发者不需要管理服务器或集群</li>
+      <li><strong>提高开发效率</strong>：团队可以更专注于业务逻辑而非基础设施</li>
+    </ul>
+
+    <h2>主要的无服务器平台</h2>
+    <p>目前市场上有许多成熟的无服务器平台，包括：</p>
+    <ul>
+      <li><strong>Amazon Web Services (AWS) Lambda</strong>：市场领先的无服务器计算服务</li>
+      <li><strong>Microsoft Azure Functions</strong>：Azure云平台的无服务器解决方案</li>
+      <li><strong>Google Cloud Functions</strong>：Google Cloud的无服务器执行环境</li>
+      <li><strong>IBM Cloud Functions</strong>：基于Apache OpenWhisk的无服务器平台</li>
+      <li><strong>阿里巴巴函数计算</strong>：阿里云的无服务器服务</li>
+    </ul>
+
+    <h2>使用AWS Lambda的示例</h2>
+    <p>AWS Lambda是目前最流行的无服务器计算平台之一。以下是一个简单的Lambda函数示例：</p>
+    <pre><code>// Node.js示例：Lambda函数
+exports.handler = async (event) => {
+    // 获取请求参数
+    const { name } = event.queryStringParameters || { name: 'World' };
+
+    // 返回响应
+    return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: `Hello, ${name}!` })
+    };
+};</code></pre>
+
+    <p>可以通过API Gateway触发此Lambda函数，创建一个完整的无服务器API。</p>
+
+    <h2>无服务器架构的设计模式</h2>
+
+    <h3>1. API后端</h3>
+    <p>无服务器函数常用作API后端，通过API Gateway接收HTTP请求并返回响应。</p>
+
+    <h3>2. 事件处理</h3>
+    <p>无服务器函数可以由多种事件触发，如云存储事件、数据库事件、消息队列事件等。</p>
+
+    <h3>3. 实时文件处理</h3>
+    <p>在文件上传到云存储时触发无服务器函数进行处理，如图像调整、视频转码等。</p>
+
+    <h3>4. 定时任务</h3>
+    <p>使用云服务提供商的计划任务功能定期触发无服务器函数，执行定时任务。</p>
+
+    <h2>无服务器架构的挑战</h2>
+    <p>尽管无服务器架构有许多优势，但也存在一些挑战：</p>
+    <ul>
+      <li><strong>冷启动</strong>：长时间未执行的函数可能需要额外时间启动</li>
+      <li><strong>调试和监控</strong>：分布式系统增加了调试和监控的复杂性</li>
+      <li><strong>执行时间限制</strong>：大多数平台对单次执行时间有限制（如AWS Lambda的15分钟限制）</li>
+      <li><strong>供应商锁定</strong>：深度依赖特定云服务提供商的API和服务</li>
+    </ul>
+
+    <h2>无服务器开发工具</h2>
+    <p>以下是一些流行的无服务器开发工具：</p>
+    <ul>
+      <li><strong>Serverless Framework</strong>：支持多种云平台的无服务器部署工具</li>
+      <li><strong>AWS SAM (Serverless Application Model)</strong>：AWS的无服务器应用模型</li>
+      <li><strong>Apache OpenWhisk</strong>：开源无服务器框架</li>
+      <li><strong>NestJS</strong>：Node.js框架，支持无服务器应用开发</li>
+      <li><strong> Claudia.js</strong>：部署无服务器应用的工具</li>
+    </ul>
+
+    <h2>总结</h2>
+    <p>无服务器架构代表了云计算发展的新方向，它允许开发者构建可扩展、弹性且成本效益高的应用，而无需管理服务器基础设施。尽管存在一些挑战，如冷启动和供应商锁定，但通过合理的设计和工具选择，无服务器架构可以为许多应用场景提供理想的解决方案。随着技术的不断发展，无服务器模型可能会成为未来云计算的主流模式之一。</p>
+  </div>
+</article>
+
+<!-- 页脚 -->
+<footer>
+  <div class="footer-container">
+    <p>&copy; 2025 技术探索者博客 | 南昌大学软件学院大作业项目 | 保留所有权利</p>
+    <a href="../index.html" class="back-to-home">返回首页 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</footer>
+
+<script>
+  // 回到顶部功能
+  document.addEventListener('DOMContentLoaded', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>
+</body>
+</html>

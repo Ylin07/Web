@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS3动画与过渡效果实战指南 - 技术探索者</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      @import "../style/acticle.css";
+    .demo-container {
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background-color: var(--light);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .animated-text {
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .animated-button {
+      padding: 0.8rem 1.5rem;
+      background-color: var(--secondary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+
+    .animated-button:hover {
+      background-color: #2980b9;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+  </style>
+</head>
+<body>
+<nav>
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-laptop-code"></i>
+            <h1>技术探索者</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> 首页</a></li>
+            <li><a href="../article.html"><i class="fas fa-newspaper"></i> 文章</a></li>
+            <li><a href="../about.html"><i class="fas fa-user"></i> 关于</a></li>
+            <li><a href="../login.html"><i class="fas fa-sign-in-alt"></i> 登录|注册</a></li>
+        </ul>
+    </div>
+</nav>
+<!-- 文章内容 -->
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">CSS3动画与过渡效果实战指南</h1>
+    <div class="article-meta">
+      <span><i class="far fa-calendar"></i> 2025-06-22</span>
+      <span><i class="far fa-eye"></i> 1.8K 阅读</span>
+      <span><i class="far fa-comment"></i> 12 评论</span>
+    </div>
+    <span class="article-tag">CSS3</span>
+  </header>
+
+  <div class="article-content">
+    <p>CSS3动画和过渡效果为网页设计带来了全新的维度，使我们能够创建更加生动、交互性强的用户界面。本文将深入探讨CSS3动画的核心概念、实现方法以及实际应用场景。</p>
+
+    <h2>CSS3过渡效果基础</h2>
+    <p>过渡效果允许元素在属性值变化时平滑地从一个状态过渡到另一个状态。基本语法如下：</p>
+    <pre><code>transition: property duration timing-function delay;</code></pre>
+
+    <p>各参数说明：</p>
+    <ul>
+      <li><code>property</code> - 需要添加过渡效果的CSS属性</li>
+      <li><code>duration</code> - 过渡效果持续时间（秒或毫秒）</li>
+      <li><code>timing-function</code> - 过渡效果的时间函数（如linear, ease, ease-in等）</li>
+      <li><code>delay</code> - 过渡效果延迟时间</li>
+    </ul>
+
+    <h3>过渡效果示例</h3>
+    <p>一个简单的按钮悬停效果：</p>
+    <pre><code>.button {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}</code></pre>
+
+    <h3>实际效果演示</h3>
+    <div class="demo-container">
+      <button class="animated-button">悬停查看过渡效果</button>
+    </div>
+
+    <h2>CSS3动画基础</h2>
+    <p>CSS3动画通过@keyframes规则定义，允许元素在多个关键帧之间平滑过渡。基本语法如下：</p>
+    <pre><code>@keyframes animation-name {
+    keyframes-selector {
+        CSS-styles;
+    }
+}</code></pre>
+
+    <h3>创建简单的动画</h3>
+    <p>以下是一个简单的脉动动画示例：</p>
+    <pre><code>@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}</code></pre>
+
+    <h3>实际效果演示</h3>
+    <div class="demo-container">
+      <span class="animated-text">脉动动画效果</span>
+    </div>
+
+    <h2>高级动画技术</h2>
+    <p>除了基本的动画，CSS3还支持更复杂的动画效果，如路径动画、3D变换等。</p>
+
+    <h3>3D变换效果</h3>
+    <p>使用transform属性可以创建3D效果：</p>
+    <pre><code>.card {
+    width: 200px;
+    height: 300px;
+    perspective: 1000px;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.card:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+}</code></pre>
+
+    <h3>动画状态控制</h3>
+    <p>可以通过以下属性控制动画状态：</p>
+    <ul>
+      <li><code>animation-play-state</code> - 控制动画是否暂停或运行</li>
+      <li><code>animation-iteration-count</code> - 设置动画播放次数（infinite表示无限次）</li>
+      <li><code>animation-direction</code> - 设置动画播放方向（normal, reverse, alternate等）</li>
+    </ul>
+
+    <h2>性能优化技巧</h2>
+    <p>虽然动画效果可以提升用户体验，但过度使用可能会影响页面性能。以下是一些优化技巧：</p>
+    <ul>
+      <li>尽量使用transform和opacity属性，因为它们可以触发GPU加速</li>
+      <li>避免对大量元素同时应用复杂动画</li>
+      <li>使用will-change属性提示浏览器哪些属性将发生变化</li>
+      <li>谨慎使用3D变换，因为它们可能对移动设备的性能产生较大影响</li>
+    </ul>
+
+    <h2>实际应用场景</h2>
+    <p>CSS3动画和过渡效果在现代Web设计中有广泛的应用：</p>
+    <ul>
+      <li>按钮和链接的悬停效果</li>
+      <li>菜单和导航的展开/收起动画</li>
+      <li>页面加载和内容切换时的过渡效果</li>
+      <li>表单验证和错误提示动画</li>
+      <li>数据可视化和信息图表的动画展示</li>
+    </ul>
+
+    <h2>总结</h2>
+    <p>CSS3动画和过渡效果为Web开发提供了强大的视觉表达能力，使我们能够创建更加丰富、交互性强的用户体验。通过合理使用这些技术，可以在不依赖JavaScript的情况下实现许多复杂的动画效果。希望本文能够帮助你更好地理解和运用CSS3动画技术。</p>
+  </div>
+</article>
+
+<!-- 页脚 -->
+<footer>
+  <div class="footer-container">
+    <p>&copy; 2025 技术探索者博客 | 南昌大学软件学院大作业项目 | 保留所有权利</p>
+    <a href="../index.html" class="back-to-home">返回首页 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</footer>
+
+<script>
+  // 回到顶部功能
+  document.addEventListener('DOMContentLoaded', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XSS攻击原理与防御策略完全解析 - 技术探索者</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+      @import "../style/acticle.css";
+
+    .vulnerability-demo {
+      background-color: #fff8f8;
+      border-left: 4px solid var(--accent);
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+  </style>
+</head>
+<body>
+<!-- 导航栏 -->
+<nav>
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-laptop-code"></i>
+            <h1>技术探索者</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../index.html"><i class="fas fa-home"></i> 首页</a></li>
+            <li><a href="../article.html"><i class="fas fa-newspaper"></i> 文章</a></li>
+            <li><a href="../about.html"><i class="fas fa-user"></i> 关于</a></li>
+            <li><a href="../login.html"><i class="fas fa-sign-in-alt"></i> 登录|注册</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- 文章内容 -->
+<article class="article-container">
+  <header class="article-header">
+    <h1 class="article-title">XSS攻击原理与防御策略完全解析</h1>
+    <div class="article-meta">
+      <span><i class="far fa-calendar"></i> 2025-06-28</span>
+      <span><i class="far fa-eye"></i> 3.1K 阅读</span>
+      <span><i class="far fa-comment"></i> 24 评论</span>
+    </div>
+    <span class="article-tag">Web安全</span>
+  </header>
+
+  <div class="article-content">
+    <p>跨站脚本攻击（XSS）是Web应用中最常见的安全漏洞之一，它允许攻击者在用户浏览器中执行恶意脚本。本文将深入探讨XSS攻击的原理、类型以及有效的防御策略。</p>
+
+    <h2>什么是XSS攻击？</h2>
+    <p>XSS攻击指攻击者将恶意脚本注入到正常网页中，当用户浏览该页面时，恶意脚本会在用户浏览器中执行。这些脚本可以窃取用户信息、劫持用户会话或执行其他恶意操作。</p>
+
+    <h2>XSS攻击的类型</h2>
+    <p>XSS攻击主要分为三种类型：</p>
+
+    <h3>1. 存储型XSS</h3>
+    <p>存储型XSS（也称为持久型XSS）指恶意脚本被永久存储在目标服务器上，如数据库、消息论坛或评论系统。当其他用户浏览包含恶意脚本的页面时，脚本会在他们的浏览器中执行。</p>
+
+    <h3>2. 反射型XSS</h3>
+    <p>反射型XSS指恶意脚本作为请求的一部分发送给服务器，服务器又将脚本包含在响应中返回给用户。这种攻击通常是通过诱导用户点击包含恶意脚本的链接来实现的。</p>
+
+    <h3>3. DOM型XSS</h3>
+    <p>DOM型XSS不依赖服务器端响应，而是通过操作DOM（文档对象模型）来执行恶意脚本。这种攻击发生在客户端，服务器可能不会记录任何恶意活动。</p>
+
+    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1000" alt="XSS攻击示意图">
+
+    <h2>XSS攻击的风险</h2>
+    <p>成功实施的XSS攻击可以导致以下后果：</p>
+    <ul>
+      <li>窃取用户cookie和会话信息</li>
+      <li>劫持用户账户</li>
+      <li>篡改网页内容</li>
+      <li>传播恶意软件</li>
+      <li>执行钓鱼攻击</li>
+      <li>访问用户浏览器中的敏感信息</li>
+    </ul>
+
+    <h2>XSS防御策略</h2>
+    <p>防御XSS攻击需要从多个层面采取措施：</p>
+
+    <h3>1. 输入验证</h3>
+    <p>对所有用户输入进行严格验证，确保只接受预期的输入格式。使用白名单验证而非黑名单验证。</p>
+
+    <h3>2. 输出编码</h3>
+    <p>在将用户输入输出到页面之前，将其编码为HTML实体，防止浏览器将其解析为可执行代码。</p>
+    <pre><code>// JavaScript输出编码示例
+function encodeHTML(str) {
+    return str.replace(/[&<>'"]/g, function(match) {
+        switch(match) {
+            case '&': return '&amp;';
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case "'": return '&#39;';
+            case '"': return '&quot;';
+        }
+    });
+}</code></pre>
+
+    <h3>3. 使用内容安全策略（CSP）</h3>
+    <p>通过HTTP头或meta标签设置内容安全策略，限制页面可以加载哪些资源，防止恶意脚本执行。</p>
+    <pre><code>// CSP HTTP头示例
+Content-Security-Policy: default-src 'self';
+script-src 'self' 'unsafe-inline' https://trusted.cdn.com;
+style-src 'self' 'unsafe-inline';
+img-src 'self' https://trusted-images.com;</code></pre>
+
+    <h3>4. HTTPOnly和Secure Cookie属性</h3>
+    <p>设置cookie的HTTPOnly属性，防止JavaScript访问cookie。同时设置Secure属性，确保cookie只通过HTTPS传输。</p>
+
+    <h3>5. 使用安全的编码库</h3>
+    <p>使用经过验证的安全编码库来处理用户输入，如DOMPurify或OWASP Java Encoder。</p>
+
+    <div class="vulnerability-demo">
+      <p><strong>注意：</strong>以下示例展示了XSS漏洞，但在实际应用中绝不要这样实现。</p>
+      <pre><code>// 易受XSS攻击的危险代码示例
+// 不要使用此代码！这是为了演示目的的漏洞示例
+function displayUserInput() {
+    var userInput = new URLSearchParams(window.location.search).get('data');
+    document.getElementById('content').innerHTML = userInput;
+}</code></pre>
+    </div>
+
+    <h2>XSS漏洞检测</h2>
+    <p>定期进行安全测试以检测XSS漏洞：</p>
+    <ul>
+      <li>手动测试：输入特定的XSS测试字符串，观察是否被正确处理</li>
+      <li>自动化扫描：使用工具如OWASP ZAP或Burp Suite扫描Web应用</li>
+      <li>代码审查：定期审查代码，寻找可能导致XSS漏洞的模式</li>
+    </ul>
+
+    <h2>总结</h2>
+    <p>XSS攻击是Web应用面临的主要威胁之一，但通过实施适当的防御措施，可以有效降低风险。作为开发者，我们需要始终对用户输入保持警惕，采用多层次的防御策略，确保Web应用的安全性。</p>
+  </div>
+</article>
+
+<!-- 页脚 -->
+<footer>
+  <div class="footer-container">
+    <p>&copy; 2025 技术探索者博客 | 南昌大学软件学院大作业项目 | 保留所有权利</p>
+    <a href="../index.html" class="back-to-home">返回首页 <i class="fas fa-arrow-right"></i></a>
+  </div>
+</footer>
+
+<script>
+  // 回到顶部功能
+  document.addEventListener('DOMContentLoaded', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+</script>
+</body>
+</html>
