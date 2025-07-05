@@ -464,7 +464,6 @@
   </style>
 </head>
 <body>
-<!-- 页头区域 -->
 <header>
   <div class="header-container">
     <div class="logo">
@@ -482,7 +481,6 @@
   </div>
 </header>
 
-<!-- Banner区域 -->
 <section class="page-banner">
   <div class="banner-content">
     <h1>关于技术探索者</h1>
@@ -490,9 +488,7 @@
   </div>
 </section>
 
-<!-- 主内容区 -->
 <main>
-  <!-- 关于网站部分 -->
   <section class="about-section">
     <div class="section-title">
       <h2>我们的故事</h2>
@@ -500,15 +496,12 @@
 
     <div class="about-content">
       <p>技术探索者诞生于2025年初，由南昌大学软件学院的一群热爱Web技术的开发者创建。我们观察到，随着Web技术的快速发展，安全威胁也日益增多。很多开发者专注于功能实现，却忽视了至关重要的安全实践。</p>
-
       <div class="mission-statement">
         <p><i class="fas fa-quote-left"></i> 我们的使命是弥合开发与安全之间的鸿沟，帮助开发者构建既强大又安全的Web应用。我们相信，只有深入了解技术原理和安全机制，才能创建真正可靠、值得信赖的互联网环境。<i class="fas fa-quote-right"></i></p>
       </div>
-
       <p>在过去的半年里，我们发布了100多篇技术文章，涵盖了HTML5、CSS3、JavaScript、Web安全、性能优化等多个领域。我们的内容被超过50,000名开发者阅读，并获得了行业专家和教育机构的认可。</p>
     </div>
 
-    <!-- 网站特色 -->
     <div class="section-title" style="margin-top: 4rem;">
       <h2>网站特色</h2>
     </div>
@@ -564,16 +557,13 @@
     </div>
   </section>
 
-  <!-- 技术栈部分 -->
   <section class="about-section tech-stack">
     <div class="section-title">
       <h2>技术栈</h2>
     </div>
-
     <p class="about-content" style="text-align: center; margin-bottom: 3rem;">
       技术探索者网站采用现代Web技术构建，注重性能、安全性和用户体验。
     </p>
-
     <div class="tech-grid">
       <div class="tech-card">
         <div class="tech-icon">
@@ -604,7 +594,7 @@
           <i class="fas fa-shield-alt"></i>
         </div>
         <h3 class="tech-name">安全实践</h3>
-        <p class="tech-description">XSS防护、CSP策略、输入验证等</p>
+        <p class="tech-description">XSS防护、输入验证等</p>
       </div>
 
       <div class="tech-card">
@@ -625,7 +615,7 @@
     </div>
   </section>
 
-  <!-- 新增留言板部分 -->
+
   <section class="about-section message-board">
     <div class="section-title">
       <h2>留言建议</h2>
@@ -669,7 +659,6 @@
   </section>
 </main>
 
-<!-- 页脚区域 -->
 <footer>
   <div class="footer-container">
     <div class="footer-column">
@@ -717,45 +706,24 @@
 </footer>
 
 <script>
-  // 简单的交互效果增强
   document.addEventListener('DOMContentLoaded', function() {
-    // 导航链接激活效果
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
-        navLinks.forEach(l => l.classList.remove('active'));
-        this.classList.add('active');
-      });
-    });
-
-    // 设置关于页面链接为激活状态
-    const aboutLink = document.querySelector('nav a[href="about.html"]');
-    if (aboutLink) {
-      aboutLink.classList.add('active');
-    }
-
-
-    // 留言板功能
     const messageForm = document.getElementById('message-form');
     const messageList = document.getElementById('message-list');
     const messageCount = document.getElementById('message-count');
     let messages = [];
 
-    // 加载保存的留言
     const savedMessages = localStorage.getItem('messages');
     if (savedMessages) {
       messages = JSON.parse(savedMessages);
       renderMessages();
     }
 
-    // 提交表单
     messageForm.addEventListener('submit', function(e) {
       e.preventDefault();
 
       const name = document.getElementById('name').value;
       const message = document.getElementById('message').value;
 
-      // 创建留言对象
       const newMessage = {
         id: Date.now(),
         name,
@@ -763,7 +731,6 @@
         time: new Date().toLocaleString()
       };
 
-      // 添加到数组
       messages.unshift(newMessage);
 
       // 保存到localStorage
@@ -798,7 +765,6 @@
       messages.forEach(msg => {
         const li = document.createElement('li');
         li.className = 'message-item';
-
         // 这里存在XSS漏洞：直接使用innerHTML插入用户输入内容
         // 实际应用中应该使用textContent避免XSS攻击
         li.innerHTML = `

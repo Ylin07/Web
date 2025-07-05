@@ -8,7 +8,6 @@
     <style>
         @import "style/main.css";
 
-        /* 全局样式 */
         body {
             align-items: center;
             min-height: 100vh;
@@ -26,7 +25,7 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-            margin-top: 60px; /* 为导航栏留出空间 */
+            margin-top: 60px;
         }
 
         /* 左侧欢迎区域 */
@@ -75,23 +74,6 @@
             font-size: 5rem;
             color: var(--secondary);
             margin-bottom: 20px;
-        }
-
-        .toggle-btn {
-            background-color: transparent;
-            border: 2px solid white;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 20px;
-        }
-
-        .toggle-btn:hover {
-            background-color: white;
-            color: var(--primary);
         }
 
         /* 右侧表单区域 */
@@ -376,7 +358,7 @@
     </style>
 </head>
 <body>
-<!-- 页头区域 -->
+
 <header>
     <div class="header-container">
         <div class="logo">
@@ -403,7 +385,6 @@
             </div>
             <h1>欢迎回来!</h1>
             <p>加入我们的技术社区，探索Web开发与安全的最新趋势和实践经验。已有账号？请登录。</p>
-            <button class="toggle-btn" id="show-login">登录</button>
         </div>
     </div>
 
@@ -498,11 +479,9 @@
                         <div class="error-message" id="confirm-error"></div>
                     </div>
 
-                    <!-- 添加个人介绍字段 - XSS漏洞来源 -->
                     <div class="form-group">
                         <label for="register-intro">个人介绍</label>
                         <textarea id="register-intro" class="form-control" name="intro" placeholder="请介绍一下你自己..."></textarea>
-                        <div class="form-hint">支持HTML格式，展示你的个性！</div>
                     </div>
 
                     <button type="submit" class="submit-btn">注册</button>
@@ -538,9 +517,7 @@
 
                     <div class="intro-section">
                         <div class="info-label">个人介绍</div>
-                        <div class="intro-content" id="profile-intro">
-                            <!-- XSS漏洞点：用户输入的内容将直接渲染到这里 -->
-                        </div>
+                        <div class="intro-content" id="profile-intro"></div>
                     </div>
 
                     <button class="submit-btn" id="continue-btn">进入首页</button>
@@ -552,7 +529,7 @@
 
 
 <script>
-    // 表单切换功能
+
     document.addEventListener('DOMContentLoaded', function() {
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
@@ -627,7 +604,7 @@
             window.location.href = 'index.html';
         });
 
-        // 表单验证
+
         const loginFormEl = document.getElementById('loginForm');
         const registerFormEl = document.getElementById('registerForm');
 

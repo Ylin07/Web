@@ -787,7 +787,6 @@
     setupViewToggle();
   });
 
-  // 渲染文章卡片
   function renderArticles(articles) {
     const gridContainer = document.getElementById('articles-container');
     const listContainer = document.getElementById('articles-list-container');
@@ -853,21 +852,17 @@
   }
 
   // 设置搜索功能
-  // 修改setupSearch函数，添加URL参数反射
   function setupSearch() {
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
 
-    // 从URL获取搜索参数
     const urlParams = new URLSearchParams(window.location.search);
     const searchParam = urlParams.get('search');
 
-    // 如果URL中有search参数，填充到搜索框并执行搜索
     if (searchParam) {
       searchInput.value = searchParam;
       searchResults.style.display = 'block';
 
-      // 反射型XSS漏洞点：直接将URL参数插入到页面中
       searchResults.innerHTML = `
       <h3>搜索: "${searchParam}"</h3>
       <p>找到 ${articlesData.length} 条相关结果</p>
@@ -885,10 +880,8 @@
         return;
       }
 
-      // 显示搜索结果
-      searchResults.style.display = 'block';
 
-      // 这里存在XSS漏洞：直接使用innerHTML插入用户输入内容
+      searchResults.style.display = 'block';
       searchResults.innerHTML = `
       <h3>搜索: "${searchTerm}"</h3>
       <p>找到 ${articlesData.length} 条相关结果</p>
@@ -898,30 +891,26 @@
     });
   }
 
-  // 设置筛选器
   function setupFilters() {
     const filterButtons = document.querySelectorAll('.filter-btn');
 
     filterButtons.forEach(button => {
       button.addEventListener('click', function() {
-        // 更新活动按钮
+
         filterButtons.forEach(btn => btn.classList.remove('active'));
         this.classList.add('active');
 
-        // 获取筛选类别
         const category = this.getAttribute('data-category');
         filterArticles('', category);
       });
     });
   }
 
-  // 设置视图切换
   function setupViewToggle() {
     const viewButtons = document.querySelectorAll('.view-toggle-btn');
 
     viewButtons.forEach(button => {
       button.addEventListener('click', function() {
-        // 更新活动视图按钮
         viewButtons.forEach(btn => btn.classList.remove('active'));
         this.classList.add('active');
 
@@ -955,9 +944,7 @@
               article.tag.toLowerCase().includes(searchTerm)
       );
     }
-
-    // 重新渲染文章
-    renderArticles(filteredArticles);
+   renderArticles(filteredArticles);
   }
 </script>
 </body>
