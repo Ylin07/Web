@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tags</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <style>html { font-size: 17px; scroll-behavior: smooth; }
+
+:root {
+  --page-bg: #ececec;
+  --text: #232323;
+  --heading: #161616;
+  --muted: #666;
+  --rule: #cecece;
+  --link: #2d2d2d;
+  --link-soft: rgba(0, 0, 0, 0.045);
+  --content-width: 900px;
+  --toc-width: 400px;
+  --body-font: "Noto Sans SC", "Segoe UI", "PingFang SC", sans-serif;
+  --mono-font: "IBM Plex Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--page-bg);
+  color: var(--text);
+  font-family: var(--body-font);
+  line-height: 1.7;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--heading);
+  font-weight: 500;
+  line-height: 1.22;
+  margin: 1.12em 0 0.36em;
+  scroll-margin-top: 18px;
+}
+
+h1 { font-size: 1.98rem; }
+h2 { font-size: 1.52rem; }
+h3 { font-size: 1.26rem; }
+h4 { font-size: 1.08rem; }
+
+p, ul, ol, blockquote, table, pre, figure { margin: 0.68rem 0 0.82rem; }
+p, li, td, th { font-size: 1rem; }
+
+ul, ol { padding-left: 1.35rem; }
+li + li { margin-top: 0.14rem; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { background: var(--link-soft); }
+
+blockquote {
+  margin-left: 0;
+  padding-left: 0.85rem;
+  border-left: 2px solid var(--rule);
+  color: var(--muted);
+}
+
+pre {
+  overflow-x: auto;
+  padding: 0.7rem 0.82rem;
+  border: 1px solid var(--rule);
+  background: #202225;
+}
+
+pre[class*="language-"] { position: relative; padding-top: 2rem; }
+
+pre[class*="language-"]::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0.48rem;
+  right: 0.65rem;
+  color: #b9b9b9;
+  font-family: var(--mono-font);
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+}
+
+code {
+  font-family: var(--mono-font);
+  font-size: 0.86em;
+  background: #e1e1e1;
+  padding: 0.04rem 0.2rem;
+}
+
+pre code { background: transparent; padding: 0; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 0.45rem 0.56rem; border-bottom: 1px solid var(--rule); text-align: left; }
+
+img { max-width: 100%; height: auto; display: block; margin: 0.2rem auto; }
+figcaption { margin-top: 0.35rem; color: var(--muted); font-size: 0.82rem; text-align: center; }
+hr { border: 0; border-top: 1px solid var(--rule); }
+
+
+.main-shell {
+  width: min(1300px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, var(--content-width)) minmax(300px, var(--toc-width));
+  gap: 0;
+  align-items: start;
+  padding: 18px 30px 36px;
+}
+
+.content-shell {
+  min-width: 0;
+  padding-right: 38px;
+  border-right: 1px solid var(--rule);
+}
+
+.sidebar-shell {
+  position: sticky;
+  top: 16px;
+  align-self: start;
+  min-width: 0;
+  padding-left: 28px;
+}
+
+.header-shell {
+  margin-bottom: 0.62rem;
+  padding-bottom: 0.62rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.title-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+}
+
+.eyebrow {
+  margin: 0.12rem 0 0;
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+
+.global-nav {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.nav-link {
+  color: var(--muted);
+  text-decoration: none;
+  font-family: var(--mono-font);
+  font-size: 0.86rem;
+}
+
+.nav-link::before { content: "["; }
+.nav-link::after { content: "]"; }
+
+.nav-link:hover,
+.nav-link.is-active {
+  color: var(--heading);
+}
+
+.page-title {
+  margin: 0;
+  font-size: clamp(1.76rem, 2.4vw, 2.2rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.18;
+  color: var(--heading);
+}
+
+.article-shell {
+  margin-top: 0.45rem;
+}
+
+.site-footer {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+.site-footer-inner {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.85rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-family: var(--mono-font);
+  font-size: 0.68rem;
+}
+
+
+.sidebar-inner {
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+}
+
+.sidebar-title {
+  margin: 0 0 0.72rem;
+  color: var(--heading);
+  font-size: clamp(1.12rem, 1.7vw, 1.42rem);
+  font-weight: 500;
+}
+
+.toc-empty { margin: 0; color: var(--muted); font-size: 0.88rem; }
+.toc-nav, .toc-list { margin: 0; padding: 0; list-style: none; }
+.toc-list {
+  display: grid;
+  gap: 0.08rem;
+}
+
+.toc-item, .toc-folder { margin: 0; }
+
+.toc-level-1 { --indent: 0rem; --bullet-size: 0.7rem; }
+.toc-level-2 { --indent: 1.15rem; --bullet-size: 0.64rem; }
+.toc-level-3 { --indent: 2.1rem; --bullet-size: 0.58rem; }
+.toc-level-4 { --indent: 3.05rem; --bullet-size: 0.52rem; }
+
+.toc-item > a,
+.toc-tree-link,
+.toc-folder > summary {
+  position: relative;
+  display: block;
+  color: #717171;
+  text-decoration: none;
+  font-size: 0.94rem;
+  line-height: 1.33;
+  padding: 0.1rem 0 0.1rem calc(var(--indent, 0rem) + 1.06rem);
+}
+
+.toc-item > a::before,
+.toc-tree-link::before,
+.toc-folder > summary::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--indent, 0rem));
+  top: 0.44rem;
+  width: var(--bullet-size, 0.64rem);
+  height: var(--bullet-size, 0.64rem);
+  background: #868686;
+}
+
+.toc-item > a:hover,
+.toc-item > a.is-active,
+.toc-tree-link:hover,
+.toc-tree-link.is-active,
+.toc-folder > summary:hover,
+.toc-folder[open] > summary {
+  color: var(--heading);
+}
+
+.toc-item > a.is-active::before,
+.toc-tree-link.is-active::before,
+.toc-folder[open] > summary::before {
+  background: #444;
+}
+
+.toc-folder > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.toc-folder > summary::-webkit-details-marker { display: none; }
+
+.toc-folder-body {
+  margin-left: calc(var(--indent, 0rem) + 0.36rem);
+  padding-left: 0.6rem;
+  display: grid;
+  gap: 0.05rem;
+}
+
+.group-count {
+  margin-left: 0.32rem;
+  color: var(--muted);
+  font-family: var(--mono-font);
+  font-size: 0.7rem;
+}
+
+
+.post-list { margin: 0; padding: 0; list-style: none; }
+.post-list li {
+  padding: 0;
+  border-bottom: 0;
+}
+
+.post-card { margin: 0; }
+
+.post-card-title {
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.34;
+}
+
+.post-card-meta {
+  margin-top: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+.meta-pill {
+  display: inline-block;
+  margin-right: 0.35rem;
+}
+
+.post-card-excerpt {
+  margin-top: 0.18rem;
+  color: var(--muted);
+  font-size: 0.93rem;
+}
+
+.article-shell,
+.markdown-content {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.article-shell h1,
+.article-shell h2,
+.article-shell h3,
+.article-shell h4,
+.article-shell h5,
+.article-shell h6,
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  color: var(--heading);
+}
+
+.article-shell h1,
+.markdown-content h1 {
+  font-size: 1.88rem;
+}
+
+.article-shell h2,
+.markdown-content h2 {
+  font-size: 1.52rem;
+}
+
+.article-shell h3,
+.markdown-content h3 {
+  font-size: 1.24rem;
+}
+
+.article-shell h4,
+.markdown-content h4 {
+  font-size: 1.08rem;
+}
+
+.article-shell p,
+.markdown-content p {
+  margin: 0.68rem 0;
+  color: inherit;
+}
+
+.article-shell ul,
+.article-shell ol,
+.markdown-content ul,
+.markdown-content ol {
+  margin: 0.68rem 0 0.82rem;
+}
+
+.article-shell li,
+.markdown-content li {
+  margin: 0;
+}
+
+.article-shell blockquote,
+.markdown-content blockquote {
+  margin: 0.68rem 0 0.82rem;
+  padding: 0;
+  border-left: 0;
+  border-radius: 0;
+  color: inherit;
+  background: transparent;
+}
+
+.katex-display { overflow-x: auto; overflow-y: hidden; }
+
+.home-intro {
+  padding-bottom: 0.72rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.listing-section + .listing-section { margin-top: 1.5rem; }
+.section-heading { margin-bottom: 0.65rem; }
+.section-title { margin: 0.06rem 0 0; font-size: 1.2rem; color: var(--heading); }
+.section-note { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.84rem; }
+
+.post-list { display: grid; gap: 0.66rem; }
+.post-card { padding: 0.42rem 0; border-top: 1px solid var(--rule); }
+.post-card:first-child { border-top: 0; }
+.post-card-title { margin: 0; font-size: 1.34rem; font-weight: 500; }
+.post-card-title a { text-decoration: none; }
+
+.taxonomy-paper .taxonomy-list { display: grid; gap: 0.85rem; }
+.taxonomy-group { padding-top: 0.2rem; border-top: 1px solid var(--rule); }
+.taxonomy-group:first-child { border-top: 0; }
+.taxonomy-heading { margin: 0; font-size: 1.08rem; color: var(--heading); }
+.taxonomy-index-list { margin: 0.28rem 0 0; padding-left: 1.15rem; }
+.taxonomy-index-list li { margin: 0.1rem 0; font-size: 0.97rem; }
+
+.taxonomy-children {
+  margin-top: 0.44rem;
+  padding-left: 0.78rem;
+  border-left: 1px solid var(--rule);
+  display: grid;
+  gap: 0.55rem;
+}
+
+
+.tag-list,
+.category-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag-list a,
+.category-list a {
+  display: inline-block;
+  padding: 0.08rem 0.42rem;
+  border: 1px solid #d3d3d3;
+  background: #efefef;
+  color: inherit;
+  font-size: 0.82rem;
+}
+
+.taxonomy-group {
+  margin: 1rem 0 1.4rem;
+}
+
+.taxonomy-heading {
+  margin: 0;
+  font-size: 1.08rem;
+}
+
+.group-count {
+  color: var(--muted);
+  font-family: var(--mono-font);
+  font-size: 0.7rem;
+}
+
+.taxonomy-index-list {
+  margin: 0.45rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.article-pager {
+  margin-top: 1.4rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--rule);
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pager-link {
+  color: var(--heading);
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+
+.pager-prev { justify-self: start; }
+.pager-home { justify-self: center; }
+.pager-next { justify-self: end; }
+
+.pager-link:hover {
+  background: var(--link-soft);
+}
+
+.pager-link.is-disabled {
+  color: #9a9a9a;
+  cursor: default;
+  pointer-events: none;
+}
+
+.post-card-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+
+.meta-pill {
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted);
+  font-family: var(--mono-font);
+  font-size: 0.79rem;
+  text-decoration: none;
+}
+
+.meta-date { color: var(--heading); text-decoration: none; }
+
+
+@media (max-width: 1300px) {
+  :root { --toc-width: 400px; }
+}
+
+@media (max-width: 1120px) {
+  .main-shell {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px 14px 24px;
+  }
+
+  .content-shell {
+    padding-right: 0;
+    border-right: 0;
+  }
+
+  .sidebar-shell {
+    position: static;
+    padding-left: 0;
+    border-top: 1px solid var(--rule);
+    padding-top: 0.8rem;
+  }
+
+  .sidebar-inner {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 640px) {
+  html { font-size: 16px; }
+  .page-title { font-size: clamp(1.34rem, 5.4vw, 1.6rem); }
+}
+</style>
+  <script>window.addEventListener('DOMContentLoaded', () => {
+  try {
+    if (window.Prism) Prism.highlightAll();
+  } catch {}
+
+  const tocLinks = Array.from(document.querySelectorAll('.toc-nav a'));
+  const headings = tocLinks
+    .map(link => document.getElementById((link.getAttribute('href') || '').slice(1)))
+    .filter(Boolean);
+
+  if (!tocLinks.length || !headings.length || !('IntersectionObserver' in window)) return;
+
+  const byId = new Map(tocLinks.map(link => [link.getAttribute('href').slice(1), link]));
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      for (const link of tocLinks) link.classList.remove('is-active');
+      const active = byId.get(entry.target.id);
+      if (active) active.classList.add('is-active');
+    }
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0.1 });
+
+  for (const heading of headings) observer.observe(heading);
+});
+</script>
+</head>
+<body>
+  <main class="main-shell">
+    <section class="content-shell">
+      <header class="header-shell">
+  <div class="title-row">
+    <h1 class="page-title">tags</h1>
+    <nav class="global-nav" aria-label="Navigation"><a class="nav-link" href="../index.html">index</a><a class="nav-link is-active" href="index.html">tags</a><a class="nav-link" href="../categories/index.html">categories</a><a class="nav-link" href="../about/index.html">about</a></nav>
+  </div>
+  <p class="eyebrow">Tag Index</p>
+</header>
+
+      <article class="article-shell markdown-content"><section class="listing-section taxonomy-paper">
+    <section class="taxonomy-group" id="tag-demo">
+      <h2 class="taxonomy-heading">demo <span class="group-count">1</span></h2>
+      <ul class="taxonomy-index-list"><li><a href="../src/1-hello.html">1:hello（Markdown 渲染演示）</a></li></ul>
+    </section>
+  
+    <section class="taxonomy-group" id="tag-markdown">
+      <h2 class="taxonomy-heading">markdown <span class="group-count">1</span></h2>
+      <ul class="taxonomy-index-list"><li><a href="../src/1-hello.html">1:hello（Markdown 渲染演示）</a></li></ul>
+    </section>
+  </section></article>
+      
+    <footer class="site-footer">
+      <div class="site-footer-inner">
+    <span>articles: 2</span>
+    <span>words: 821</span>
+      </div>
+    </footer>
+  
+
+    </section>
+    <aside class="sidebar-shell"><div class="sidebar-inner">
+  <h2 class="sidebar-title">Contents</h2>
+  <nav class="toc-nav" aria-label="Contents"><ol class="toc-list"><li class="toc-item toc-level-1"><a href="#tag-demo">demo</a></li><li class="toc-item toc-level-1"><a href="#tag-markdown">markdown</a></li></ol></nav>
+</div>
+</aside>
+  </main>
+</body>
+</html>
